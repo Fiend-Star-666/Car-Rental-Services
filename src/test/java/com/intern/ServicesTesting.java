@@ -596,8 +596,8 @@ public class ServicesTesting {
 		System.out.println("added");
 		
 
-		ArrayList<Vehicle> trialVehicle= vehicleRepo.findAllByType(CarType.Luxury.toString());
-		System.out.println(trialVehicle.toString());
+		//ArrayList<Vehicle> trialVehicle= vehicleRepo.findAllByType(CarType.Luxury.toString());
+		//System.out.println(trialVehicle.toString());
 		
 		ArrayList<Vehicle> arr= vehicleServiceImpl.searchByModel("vista");
 		
