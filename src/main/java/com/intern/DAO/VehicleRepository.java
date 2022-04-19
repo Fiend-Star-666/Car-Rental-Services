@@ -13,6 +13,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer>{
 	Vehicle findByBarcode(String barcode);
 	Vehicle deleteByBarcode(String barcode);
 	ArrayList<Vehicle> findAllByModel(String model);
-	ArrayList<Vehicle> findAllByType(String type);
+	//ArrayList<Vehicle> findAllByType(String type);
 	
 }
