@@ -6,6 +6,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -42,7 +43,7 @@ public abstract class Account implements Search{
 	@OneToOne(targetEntity = Vehicle.class)
 	private Vehicle vehicle;
 	
-	@OneToMany(mappedBy = "account")
+	@OneToMany(mappedBy = "account",fetch = FetchType.EAGER)
 	private List<VehicleReservation> vehiclereservation;
 	
 	public abstract Boolean resetPassword();

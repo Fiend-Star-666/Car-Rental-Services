@@ -1,5 +1,7 @@
 package com.intern.services.impl;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.intern.DAO.AccountRepository;
@@ -19,6 +21,7 @@ import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.carRental.primary.vehicletypes.Car;
 import com.intern.services.AccountServices;
 
+@Transactional
 @Service
 public class AccountServiceImpl implements AccountServices {
 	
@@ -38,8 +41,6 @@ public class AccountServiceImpl implements AccountServices {
 	private CarRentalLocationRepository carRentalLocationRepo;
 	@Autowired
 	private ParkingStallRepository parkingStallRepo;
-	//@Autowired
-	//private PersonRepository personRepo;
 	
 	@Override
 	public void createAccount(Account account) {

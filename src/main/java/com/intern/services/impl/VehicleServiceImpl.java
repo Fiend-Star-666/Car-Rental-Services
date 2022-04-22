@@ -3,6 +3,8 @@ package com.intern.services.impl;
 
 import java.util.ArrayList;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.intern.DAO.CarRentalLocationRepository;
@@ -20,6 +22,7 @@ import com.intern.carRental.primary.vehicletypes.Truck;
 import com.intern.carRental.primary.vehicletypes.Van;
 import com.intern.services.VehicleServices;
 
+@Transactional
 @Service
 public class VehicleServiceImpl implements VehicleServices {
 	
@@ -89,7 +92,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			Car vehicleLatest = (Car) updatedVehicle;
 			Car vehicleOld = (Car)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
-			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
+			vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
 			vehicleOld.setPassengerCapacity(vehicleLatest.getPassengerCapacity());
 			vehicleOld.setHasSunroof(vehicleLatest.getHasSunroof());
@@ -111,7 +114,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			SUV vehicleLatest = (SUV) updatedVehicle;
 			SUV vehicleOld = (SUV)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
-			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
+			vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
 			vehicleOld.setPassengerCapacity(vehicleLatest.getPassengerCapacity());
 			vehicleOld.setHasSunroof(vehicleLatest.getHasSunroof());
@@ -131,7 +134,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			Motorcycle vehicleLatest = (Motorcycle) updatedVehicle;
 			Motorcycle vehicleOld = (Motorcycle)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
-			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
+			vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
 			vehicleOld.setPassengerCapacity(vehicleLatest.getPassengerCapacity());
 			vehicleOld.setHasSunroof(vehicleLatest.getHasSunroof());
@@ -153,7 +156,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			Truck vehicleLatest = (Truck) updatedVehicle;
 			Truck vehicleOld = (Truck)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
-			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
+			vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
 			vehicleOld.setPassengerCapacity(vehicleLatest.getPassengerCapacity());
 			vehicleOld.setHasSunroof(vehicleLatest.getHasSunroof());
@@ -172,7 +175,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			Van vehicleLatest = (Van) updatedVehicle;
 			Van vehicleOld = (Van)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
-			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
+			vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
 			vehicleOld.setPassengerCapacity(vehicleLatest.getPassengerCapacity());
 			vehicleOld.setHasSunroof(vehicleLatest.getHasSunroof());

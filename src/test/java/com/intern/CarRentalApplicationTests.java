@@ -158,7 +158,7 @@ class CarRentalApplicationTests {
 		//carRentalLocation();
 		
 		vehicle1 = new Car();
-		vehicle1.setLicenseNumber("rf120");
+		vehicle1.setNumberPlate("rf120");
 		vehicle1.setStockNumber("an11");
 		vehicle1.setPassengerCapacity(4);
 		vehicle1.setHasSunroof(true);

@@ -33,7 +33,7 @@ public abstract class Vehicle {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int id;
 	
-	private String licenseNumber;
+	private String numberPlate;
 	private String stockNumber;
 	private int passengerCapacity;
 

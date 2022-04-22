@@ -73,9 +73,8 @@ public class ServicesTesting {
 	VehicleReservationImpl vehicleReservationImpl;
 	
 	@Autowired
-	private CarRentalSystemRepository carRentalSystemRepo;
-	
-	
+	private CarRentalSystemRepository carRentalSystemRepo;	
+
 	@Autowired
 	private CarRentalLocationRepository carRentalLocationRepo;
 	
@@ -161,7 +160,7 @@ public class ServicesTesting {
 		//carRentalLocation();
 		
 		vehicle1 = new Car();
-		vehicle1.setLicenseNumber("rf120");
+		vehicle1.setNumberPlate("rf120");
 		vehicle1.setStockNumber("an11");
 		vehicle1.setPassengerCapacity(4);
 		vehicle1.setHasSunroof(true);
@@ -189,7 +188,7 @@ public class ServicesTesting {
 		//vehicle();
 		
 		vehicle2 = new Car();
-		vehicle2.setLicenseNumber("woofrf120");
+		vehicle2.setNumberPlate("woofrf120");
 		vehicle2.setStockNumber("cat an11");
 		vehicle2.setPassengerCapacity(10000000);
 		vehicle2.setHasSunroof(true);
@@ -246,9 +245,9 @@ public class ServicesTesting {
 	void updatingVehicle(){
 		
 		//addingvehicle();
-	
+		
 		vehicle2 = new Car();
-		vehicle2.setLicenseNumber("woofrf120");
+		vehicle2.setNumberPlate("woofrf120");
 		vehicle2.setStockNumber("cat an11");
 		vehicle2.setPassengerCapacity(10000000);
 		vehicle2.setHasSunroof(true);
@@ -260,7 +259,6 @@ public class ServicesTesting {
 		vehicle2.setStatus(VehicleStatus.Lost);
 		vehicle2.setType(CarType.Economy);
 		
-	
 		//carRentalLocation();
 			//carRentalSystem();
 			
@@ -296,6 +294,7 @@ public class ServicesTesting {
 		
 		vehicle2.setParkingstall(parkingstall2);
 		
+		//----VehicleServiceImpl vehicleServiceImpl = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
 		vehicleServiceImpl.addVehicle(vehicle2);
 		
@@ -305,7 +304,7 @@ public class ServicesTesting {
 		//____________________________________________________
 		
 		vehicle3 = new Car();
-		vehicle3.setLicenseNumber("woofrf120");
+		vehicle3.setNumberPlate("woofrf120");
 		vehicle3.setStockNumber("cat an11");
 		vehicle3.setPassengerCapacity(5);
 		vehicle3.setHasSunroof(true);
@@ -332,8 +331,9 @@ public class ServicesTesting {
 		
 		vehicle3.setParkingstall(parkingstall2);
 		
+		//----VehicleServiceImpl vehicleServiceImpl2 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		vehicleServiceImpl.updateVehicle(vehicle3);
-		
+		 
 	}
 	
 	
@@ -341,7 +341,8 @@ public class ServicesTesting {
 	void removingVehicle() {
 		addingvehicle();
 		
-		vehicleServiceImpl.removeVehicle("7157r77");
+		VehicleServiceImpl vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		vehicleServiceImpl1.removeVehicle("7157r77");
 		System.out.println("Removed");
 	}
 	
@@ -350,7 +351,7 @@ public class ServicesTesting {
 		addingvehicle();
 		
 		Car vehicle4 = new Car();
-		vehicle4.setLicenseNumber("lksh199899");
+		vehicle4.setNumberPlate("lksh199899");
 		vehicle4.setStockNumber("11ss11jj");
 		vehicle4.setPassengerCapacity(4);
 		vehicle4.setHasSunroof(false);
@@ -397,9 +398,9 @@ public class ServicesTesting {
 		
 		vehicle4.setParkingstall(parkingstall3);
 		
-		//vehicleServiceImpl = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		VehicleServiceImpl vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
-		vehicleServiceImpl.addVehicle(vehicle4);
+		vehicleServiceImpl1.addVehicle(vehicle4);
 		
 		System.out.println("added");
 		
@@ -411,7 +412,7 @@ public class ServicesTesting {
 		addingTwoVehicle();
 		
 		Car vehicle5 = new Car();
-		vehicle5.setLicenseNumber("DL3CAA1123");
+		vehicle5.setNumberPlate("DL3CAA1123");
 		vehicle5.setStockNumber("11ss11jk");
 		vehicle5.setPassengerCapacity(5);
 		vehicle5.setHasSunroof(false);
@@ -458,9 +459,9 @@ public class ServicesTesting {
 		
 		vehicle5.setParkingstall(parkingstall4);
 		
-		//VehicleServiceImpl vehicleServiceImpl4 =new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		VehicleServiceImpl vehicleServiceImpl4 =new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
-		vehicleServiceImpl.addVehicle(vehicle5);
+		vehicleServiceImpl4.addVehicle(vehicle5);
 		
 		System.out.println("added");
 		
@@ -469,7 +470,7 @@ public class ServicesTesting {
 	@Test
 	void searchingbymodel() {
 		vehicle2 = new Car();
-		vehicle2.setLicenseNumber("woofrf120");
+		vehicle2.setNumberPlate("woofrf120");
 		vehicle2.setStockNumber("cat an11");
 		vehicle2.setPassengerCapacity(10000000);
 		vehicle2.setHasSunroof(true);
@@ -530,7 +531,7 @@ public class ServicesTesting {
 		//_____________________________________________________
 		////
 		Car vehicle4 = new Car();
-		vehicle4.setLicenseNumber("lksh199899");
+		vehicle4.setNumberPlate("lksh199899");
 		vehicle4.setStockNumber("11ss11jj");
 		vehicle4.setPassengerCapacity(4);
 		vehicle4.setHasSunroof(false);
@@ -583,7 +584,7 @@ public class ServicesTesting {
 		System.out.println("added");					//hey hii guys //meet pe ajo//yoo coming
 		//______________________________________________________________
 		Car vehicle5 = new Car();
-		vehicle5.setLicenseNumber("DL3CAA1123");
+		vehicle5.setNumberPlate("DL3CAA1123");
 		vehicle5.setStockNumber("11ss11jk");
 		vehicle5.setPassengerCapacity(5);
 		vehicle5.setHasSunroof(false);
@@ -904,11 +905,9 @@ public class ServicesTesting {
 		
 		
 	}
-	
+	/*
 	@Test
-	void updatingReservation() throws Exception{
-		makingReservation();
-		
+	void updatingReservation() {
 		VehicleReservation vehicleReservation1 = new VehicleReservation();
 		
 		Location address2 = new Location();
@@ -941,7 +940,7 @@ public class ServicesTesting {
 		
 		member1.setVehicle(null);
 		member1.setVehiclereservation(null);
-		memberRepo.save(member1);
+		//memberRepo.save(member1);
 		accountServiceImpl.createAccount(member1);
 		
 		vehicleReservation1.setAccount(member1);
@@ -970,14 +969,14 @@ public class ServicesTesting {
 		vehicleReservation1.setPickupLocationName("Panchkula");
 		vehicleReservation1.setReturnLocationName("Patiala");
 		
-	/*	AdditionalDriver additionaldriver1 = new AdditionalDriver();
+		AdditionalDriver additionaldriver1 = new AdditionalDriver();
 		additionaldriver1.setDriverID("A2B5C6");
 		additionaldriver1.setPerson(person1);
-		additionaldriver1.setVehicleReservation(vehicleReservation1);*/
+		additionaldriver1.setVehicleReservation(vehicleReservation1);
 		
 		
-		vehicleReservation1.setAdditionaldriver(null);
-		//vehicleReservation1.getAdditionaldriver().add(additionaldriver1);
+		vehicleReservation1.setAdditionaldriver(new ArrayList<>());
+		vehicleReservation1.getAdditionaldriver().add(additionaldriver1);
 		
 		//TODO 3rd party stuff
 		vehicleReservation1.setService(null);
@@ -1007,42 +1006,12 @@ public class ServicesTesting {
 		vehicleReservation1.setBill(bill1);
 		
 		
-		String sDate7 = "11/04/2022 13:00";
-		Date date7 =  dateFormat.parse(sDate7);
-		
-		CheckTransaction payment1 = new CheckTransaction();
-		payment1.setBankName("State Bank of India");
-		payment1.setCheckNumber("AZ42F12S854GSD2");
-		payment1.setBill(bill1);
-		payment1.setAmount(bill1.getTotalAmount());
-		payment1.setCreationDate(date7);
-		payment1.setStatus(PaymentStatus.Completed);
 		
 		if(payment1.getStatus().equals(PaymentStatus.Completed)){
 			vehicleReservation1.setRSstatus(ReservationStatus.Confirmed);
 		}
 		
-	
-		String sDate8 = "11/04/2022 15:00";
-		Date date8 =  dateFormat.parse(sDate8);
-		
-		//Creating Notification
-		SMSNotification mobilenotification =new SMSNotification();
-		mobilenotification.setAddress(address2);
-	    mobilenotification.setPhoneNumber(person1.getPhone());
-				
-		mobilenotification.setVehiclereservation(vehicleReservation1);
-		mobilenotification.setBill(bill1);
-		mobilenotification.setContent("This is a mobile Notification: Your rental has been Confirmed.");
-		mobilenotification.setCreatedOn(date8);
-
-		EmailNotification webnotification=new EmailNotification();
-		webnotification.setEmail(person1.getEmail());
-		webnotification.setVehiclereservation(vehicleReservation1);
-		webnotification.setBill(bill1);
-		webnotification.setContent("This is an Email Notification: Your rental has been Confirmed.");
-		webnotification.setCreatedOn(date8);
-		webnotification.setPhoneNumber(person1.getPhone());	
+		notification();
 		
 		vehicleReservation1.setNotification(new ArrayList<>());
 		vehicleReservation1.getNotification().add(webnotification);
@@ -1054,10 +1023,17 @@ public class ServicesTesting {
 		billItemRepo.save(billItem1);
 		billItemRepo.save(billItem2);
 		
-		//paymentRepo.save(payment1);
+		paymentRepo.save(payment1);
 		
-		vehicleReservationImpl.updateReservation(vehicleReservation1);
-	}
+		vehicleReservationRepo.save(vehicleReservation1);
+
+		additionalDriverRepo.save(additionaldriver1);
+		
+		notificationRepo.save(mobilenotification);
+		notificationRepo.save(webnotification);
+		
+		
+	}*/
 	
 	@Test
 	void cancellingReservation() throws Exception  {  
@@ -1067,7 +1043,5 @@ public class ServicesTesting {
 		
 	}
 	
-	
-
-}
  
+}
