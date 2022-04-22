@@ -30,6 +30,7 @@ public abstract class Account implements Search{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)  
 	private int id;
+	
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
@@ -41,8 +42,9 @@ public abstract class Account implements Search{
 	@OneToOne(targetEntity = Vehicle.class)
 	private Vehicle vehicle;
 	
-	public abstract Boolean resetPassword();
-	
 	@OneToMany(mappedBy = "account")
 	private List<VehicleReservation> vehiclereservation;
+	
+	public abstract Boolean resetPassword();
+	
 }

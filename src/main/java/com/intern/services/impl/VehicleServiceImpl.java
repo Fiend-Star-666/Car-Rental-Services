@@ -81,13 +81,13 @@ public class VehicleServiceImpl implements VehicleServices {
 
 	// TODO correct it
 	@Override
-	public void updateVehicle(Vehicle updatedVehicle, String barcode) {
+	public void updateVehicle(Vehicle updatedVehicle) {
 		
 
 		if(updatedVehicle instanceof Car){
 			
 			Car vehicleLatest = (Car) updatedVehicle;
-			Car vehicleOld = (Car)vehicleRepo.findByBarcode(barcode);
+			Car vehicleOld = (Car)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
 			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
@@ -109,7 +109,7 @@ public class VehicleServiceImpl implements VehicleServices {
 		if(updatedVehicle instanceof SUV){
 			
 			SUV vehicleLatest = (SUV) updatedVehicle;
-			SUV vehicleOld = (SUV)vehicleRepo.findByBarcode(barcode);
+			SUV vehicleOld = (SUV)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
 			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
@@ -129,7 +129,7 @@ public class VehicleServiceImpl implements VehicleServices {
 		
 		if(updatedVehicle instanceof Motorcycle){
 			Motorcycle vehicleLatest = (Motorcycle) updatedVehicle;
-			Motorcycle vehicleOld = (Motorcycle)vehicleRepo.findByBarcode(barcode);
+			Motorcycle vehicleOld = (Motorcycle)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
 			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
@@ -151,7 +151,7 @@ public class VehicleServiceImpl implements VehicleServices {
 		if(updatedVehicle instanceof Truck){
 
 			Truck vehicleLatest = (Truck) updatedVehicle;
-			Truck vehicleOld = (Truck)vehicleRepo.findByBarcode(barcode);
+			Truck vehicleOld = (Truck)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
 			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
@@ -170,7 +170,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			
 		if(updatedVehicle instanceof Van){
 			Van vehicleLatest = (Van) updatedVehicle;
-			Van vehicleOld = (Van)vehicleRepo.findByBarcode(barcode);
+			Van vehicleOld = (Van)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
 
 			vehicleOld.setLicenseNumber(vehicleLatest.getLicenseNumber());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
@@ -269,13 +269,10 @@ public class VehicleServiceImpl implements VehicleServices {
 	}
 
 
-
-	
-	
 	
 	@Override
 	public ArrayList<Vehicle> searchByModel(String model) {
-		ArrayList<Vehicle> modelVehicles = vehicleRepo.findAllByModel(model);
+		ArrayList<Vehicle> modelVehicles = (ArrayList<Vehicle>) vehicleRepo.findAllByModel(model);
 		/*
 			Vehicle modelvehicle=
 			modelVehicles.add(modelvehicle);

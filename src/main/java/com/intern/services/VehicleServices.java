@@ -11,9 +11,11 @@ public interface VehicleServices {
 	//search inventory
 	
 	void addVehicle(Vehicle vehicle);
-	void updateVehicle(Vehicle vehicle, String barcode);
+	void updateVehicle(Vehicle vehicle);
 	void removeVehicle(String barcode);
 	ArrayList<Vehicle> searchByModel(String model);
+	
+	
 	
 }
 

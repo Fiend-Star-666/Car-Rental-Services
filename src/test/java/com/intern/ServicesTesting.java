@@ -4,7 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.intern.services.impl.AccountServiceImpl;
+import com.intern.services.impl.VehicleReservationImpl;
 import com.intern.services.impl.VehicleServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +15,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.intern.DAO.AccountRepository;
 import com.intern.DAO.BarcodeRepository;
+import com.intern.DAO.BillItemRepository;
+import com.intern.DAO.BillRepository;
 import com.intern.DAO.CarRentalLocationRepository;
 import com.intern.DAO.CarRentalSystemRepository;
+import com.intern.DAO.CarRepository;
 import com.intern.DAO.MemberRepository;
+import com.intern.DAO.NotificationRepository;
 import com.intern.DAO.ParkingStallRepository;
+import com.intern.DAO.PaymentRepository;
 import com.intern.DAO.ReceptionistRepository;
 import com.intern.DAO.VehicleRepository;
+import com.intern.DAO.VehicleReservationRepository;
+import com.intern.carRental.primary.AdditionalDriver;
 import com.intern.carRental.primary.Barcode;
+import com.intern.carRental.primary.Bill;
+import com.intern.carRental.primary.BillItem;
 import com.intern.carRental.primary.CarRentalLocation;
 import com.intern.carRental.primary.CarRentalSystem;
 import com.intern.carRental.primary.Member;
 import com.intern.carRental.primary.ParkingStall;
+import com.intern.carRental.primary.VehicleReservation;
 import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.carRental.primary.vehicletypes.Car;
+import com.intern.primary.addonServices.CheckTransaction;
+import com.intern.primary.addonServices.EmailNotification;
+import com.intern.primary.addonServices.SMSNotification;
 import com.intern.primary.enums.AccountStatus;
 import com.intern.primary.enums.CarType;
+import com.intern.primary.enums.PaymentStatus;
+import com.intern.primary.enums.ReservationStatus;
 import com.intern.primary.enums.VehicleStatus;
 import com.intern.primary.simplePOJO.Location;
 import com.intern.primary.simplePOJO.Person;
@@ -44,15 +62,19 @@ public class ServicesTesting {
 	Barcode barcode1;
 	Location address1;
 	
-	//Global
+	
 	@Autowired
 	VehicleServiceImpl vehicleServiceImpl ;//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
-
 	
+	@Autowired
+	AccountServiceImpl accountServiceImpl;
 	
+	@Autowired
+	VehicleReservationImpl vehicleReservationImpl;
 	
 	@Autowired
 	private CarRentalSystemRepository carRentalSystemRepo;
+	
 	
 	@Autowired
 	private CarRentalLocationRepository carRentalLocationRepo;
@@ -74,6 +96,27 @@ public class ServicesTesting {
 	
 	@Autowired
 	private ReceptionistRepository receptionistRepo;
+	
+	@Autowired
+	private CarRepository carRepo;
+	
+	@Autowired
+	private BillRepository billRepo;
+	
+	@Autowired
+	private BillItemRepository billItemRepo;
+	
+	@Autowired
+	private PaymentRepository paymentRepo;
+	/*
+	@Autowired
+	private AdditionalDriver additionalDriverRepo;
+	*/
+	@Autowired
+	private NotificationRepository notificationRepo;
+	
+	@Autowired
+	private VehicleReservationRepository vehicleReservationRepo;
 	
 	@Test
  	void carRentalSystem() {
@@ -162,10 +205,10 @@ public class ServicesTesting {
 		//carRentalLocation();
 			//carRentalSystem();
 			
-			CarRentalSystem carrentalsystem2 = new CarRentalSystem();
-			carrentalsystem2.setCarRentalLocation(null);
-			carrentalsystem2.setName("kohit");
-			carRentalSystemRepo.save(carrentalsystem2);
+		CarRentalSystem carrentalsystem2 = new CarRentalSystem();
+		carrentalsystem2.setCarRentalLocation(null);
+		carrentalsystem2.setName("kohit");
+		carRentalSystemRepo.save(carrentalsystem2);
 		
 		CarRentalLocation carRentallocation2 = new CarRentalLocation();
 		Location address2 = new Location();
@@ -203,8 +246,7 @@ public class ServicesTesting {
 	void updatingVehicle(){
 		
 		//addingvehicle();
-		
-		
+	
 		vehicle2 = new Car();
 		vehicle2.setLicenseNumber("woofrf120");
 		vehicle2.setStockNumber("cat an11");
@@ -248,13 +290,12 @@ public class ServicesTesting {
 	    
 		parkingstall2.setLocationIdentifier("A17");
 		parkingstall2.setStallNumber("42");
-		//parkingstall2.setVehicle(vehicle2);
+		
 		
 		parkingStallRepo.save(parkingstall2);
 		
 		vehicle2.setParkingstall(parkingstall2);
 		
-		VehicleServiceImpl vehicleServiceImpl = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
 		vehicleServiceImpl.addVehicle(vehicle2);
 		
@@ -291,8 +332,7 @@ public class ServicesTesting {
 		
 		vehicle3.setParkingstall(parkingstall2);
 		
-		VehicleServiceImpl vehicleServiceImpl2 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
-		vehicleServiceImpl2.updateVehicle(vehicle3,"7157r77");
+		vehicleServiceImpl.updateVehicle(vehicle3);
 		
 	}
 	
@@ -301,8 +341,7 @@ public class ServicesTesting {
 	void removingVehicle() {
 		addingvehicle();
 		
-		VehicleServiceImpl vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
-		vehicleServiceImpl1.removeVehicle("7157r77");
+		vehicleServiceImpl.removeVehicle("7157r77");
 		System.out.println("Removed");
 	}
 	
@@ -358,9 +397,9 @@ public class ServicesTesting {
 		
 		vehicle4.setParkingstall(parkingstall3);
 		
-		VehicleServiceImpl vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		//vehicleServiceImpl = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
-		vehicleServiceImpl1.addVehicle(vehicle4);
+		vehicleServiceImpl.addVehicle(vehicle4);
 		
 		System.out.println("added");
 		
@@ -419,9 +458,9 @@ public class ServicesTesting {
 		
 		vehicle5.setParkingstall(parkingstall4);
 		
-		VehicleServiceImpl vehicleServiceImpl4 =new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		//VehicleServiceImpl vehicleServiceImpl4 =new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
-		vehicleServiceImpl4.addVehicle(vehicle5);
+		vehicleServiceImpl.addVehicle(vehicle5);
 		
 		System.out.println("added");
 		
@@ -489,7 +528,7 @@ public class ServicesTesting {
 		
 		
 		//_____________________________________________________
-		
+		////
 		Car vehicle4 = new Car();
 		vehicle4.setLicenseNumber("lksh199899");
 		vehicle4.setStockNumber("11ss11jj");
@@ -541,7 +580,7 @@ public class ServicesTesting {
 		
 		vehicleServiceImpl.addVehicle(vehicle4);
 		
-		System.out.println("added");
+		System.out.println("added");					//hey hii guys //meet pe ajo//yoo coming
 		//______________________________________________________________
 		Car vehicle5 = new Car();
 		vehicle5.setLicenseNumber("DL3CAA1123");
@@ -551,7 +590,7 @@ public class ServicesTesting {
 		vehicle5.setModel("vista");
 		vehicle5.setMake("2016");
 		vehicle5.setManufacturingYear(2012);
-		vehicle5.setMileage(18);
+		vehicle5.setMileage(18); 
 		vehicle5.setBarcode("123eloh");
 		vehicle5.setStatus(VehicleStatus.Available);
 		vehicle5.setType(CarType.Economy);
@@ -596,9 +635,13 @@ public class ServicesTesting {
 		System.out.println("added");
 		
 
-		//ArrayList<Vehicle> trialVehicle= vehicleRepo.findAllByType(CarType.Luxury.toString());
+		List<Car> trialVehicle = carRepo.findByType(CarType.Economy);
 		//System.out.println(trialVehicle.toString());
 		
+		for(Car var:trialVehicle) {
+			System.out.println(var.toString());
+		}
+		System.out.println("____________________________________________________");
 		ArrayList<Vehicle> arr= vehicleServiceImpl.searchByModel("vista");
 		
 		for(Vehicle var:arr) {
@@ -645,12 +688,386 @@ public class ServicesTesting {
 		
 			//barcodeReader();
 		
-		//member1.setVehicle(vehicle1);
-		//member1.setVehiclereservation(null);
-		memberRepo.save(member1);
+		member1.setVehicle(null);
+		member1.setVehiclereservation(null);
+		//memberRepo.save(member1);
+		accountServiceImpl.createAccount(member1);
 	}
- 
+	
+	
+	@Test
+	void updatingAccount() throws Exception {
+		addingAccount();
+		System.out.println("Added");
+		
+		Location address3 = new Location();
+		address3.setCity("faridabad");
+		address3.setCountry("India");
+		address3.setState("Haryana");
+		address3.setStreetAddress("#198 bharat vihar, Sector 45, Rohini");
+		address3.setZipcode("160032");
+		
+		
+		//person Creation
+		Person person2=new Person();
+		person2.setName("Thor Odinson");
+		person2.setPhone("9845621781");
+		person2.setEmail("thor123@kries.com");
+		person2.setAddress(address3);
+		
+		Member member2=new Member();
+		member2.setPerson(person2);
+		member2.setASstatus(AccountStatus.Active);
+		member2.setDriverLicenseNumber("485Ad51c");
+		
+		String sDate3 = "12/01/2029";
+		Date date3 = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(sDate3);
+
+		member2.setDriverLicenseExpiry(date3);
+		member2.setPassword("Psword@123");
+		
+			//barcodeReader();
+		
+		member2.setVehicle(null);
+		member2.setVehiclereservation(null);
+		//memberRepo.save(member1);
+		accountServiceImpl.updateAccount(member2);
+		System.out.println("Editing");
+	}
+	
+	
+	@Test
+	void cancellingAccount() throws Exception {
+		addingAccount();
+		System.out.println("Added");
+		accountServiceImpl.cancelAccount("thor123@kries.com");
+		System.out.println("Removed");
+	}
+	
+	@Test
+	void makingReservation() throws Exception{
+	
+		
+		VehicleReservation vehicleReservation1 = new VehicleReservation();
+		
+		Location address2 = new Location();
+		address2.setCity("faridabad");
+		address2.setCountry("India");
+		address2.setState("Haryana");
+		address2.setStreetAddress("#198 bharat vihar, Sector 45, Rohini");
+		address2.setZipcode("160032");
+		
+		
+		//person Creation
+		Person person1=new Person();
+		person1.setName("Thor Odinson");
+		person1.setPhone("9845621781");
+		person1.setEmail("thor123@kries.com");
+		person1.setAddress(address2);
+		
+		Member member1=new Member();
+		member1.setPerson(person1);
+		member1.setASstatus(AccountStatus.Active);
+		member1.setDriverLicenseNumber("485Ad51c");
+		
+		String sDate3 = "12/01/2029";
+		Date date3 = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(sDate3);
+
+		member1.setDriverLicenseExpiry(date3);
+		member1.setPassword("Password@123");
+		
+			//barcodeReader();
+		
+		member1.setVehicle(null);
+		member1.setVehiclereservation(null);
+		memberRepo.save(member1);
+		accountServiceImpl.createAccount(member1);
+		
+		vehicleReservation1.setAccount(member1);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        
+		String sDate4 = "11/04/2022 12:00";
+		Date date4 =  dateFormat.parse(sDate4);
+			
+		String sDate5 = "15/05/2022 12:00";
+		Date date5 =  dateFormat.parse(sDate5);
+		
+		String sDate6 = "17/05/2022 14:00";
+		Date date6 =  dateFormat.parse(sDate6);
+	
+		
+		//dates to check inventory of vehicles
+		vehicleReservation1.setCreationDate(date4);
+		vehicleReservation1.setDueDate(date5);
+		vehicleReservation1.setReturnDate(date6);
+		
+		//vehicle set
+		vehicleReservation1.setVehicle(vehicle1);
+		
+		//location data+status
+		vehicleReservation1.setPickupLocationName("Panchkula");
+		vehicleReservation1.setReturnLocationName("Patiala");
+		
+	/*	AdditionalDriver additionaldriver1 = new AdditionalDriver();
+		additionaldriver1.setDriverID("A2B5C6");
+		additionaldriver1.setPerson(person1);
+		additionaldriver1.setVehicleReservation(vehicleReservation1);*/
+		
+		
+		vehicleReservation1.setAdditionaldriver(null);
+		//vehicleReservation1.getAdditionaldriver().add(additionaldriver1);
+		
+		//TODO 3rd party stuff
+		vehicleReservation1.setService(null);
+		vehicleReservation1.setRentalinsurance(null);
+		vehicleReservation1.setEquipment(null);
+		
+		vehicleReservation1.setReservationNumber("grlv98");
+		
+	
+		BillItem billItem1=new BillItem();
+		billItem1.setService("wipers");
+		billItem1.setAmount(420);
+		
+		BillItem billItem2 = new BillItem();
+		billItem2.setService("Tote bag");
+		billItem2.setAmount(69);
+		
+		
+		Bill bill1 = new Bill();
+		bill1.setBillitem(new ArrayList<>());
+		bill1.getBillitem().add(billItem1);
+		bill1.getBillitem().add(billItem2);
+		bill1.setTotalAmount(billItem1.getAmount()+billItem2.getAmount());	
+		billItem1.setBill(bill1);	
+		billItem2.setBill(bill1);
+		
+		vehicleReservation1.setBill(bill1);
+		
+		
+		String sDate7 = "11/04/2022 13:00";
+		Date date7 =  dateFormat.parse(sDate7);
+		
+		CheckTransaction payment1 = new CheckTransaction();
+		payment1.setBankName("State Bank of India");
+		payment1.setCheckNumber("AZ42F12S854GSD2");
+		payment1.setBill(bill1);
+		payment1.setAmount(bill1.getTotalAmount());
+		payment1.setCreationDate(date7);
+		payment1.setStatus(PaymentStatus.Completed);
+		
+		if(payment1.getStatus().equals(PaymentStatus.Completed)){
+			vehicleReservation1.setRSstatus(ReservationStatus.Confirmed);
+		}
+		
+	
+		String sDate8 = "11/04/2022 15:00";
+		Date date8 =  dateFormat.parse(sDate8);
+		
+		//Creating Notification
+		SMSNotification mobilenotification =new SMSNotification();
+		mobilenotification.setAddress(address2);
+	    mobilenotification.setPhoneNumber(person1.getPhone());
+				
+		mobilenotification.setVehiclereservation(vehicleReservation1);
+		mobilenotification.setBill(bill1);
+		mobilenotification.setContent("This is a mobile Notification: Your rental has been Confirmed.");
+		mobilenotification.setCreatedOn(date8);
+
+		EmailNotification webnotification=new EmailNotification();
+		webnotification.setEmail(person1.getEmail());
+		webnotification.setVehiclereservation(vehicleReservation1);
+		webnotification.setBill(bill1);
+		webnotification.setContent("This is an Email Notification: Your rental has been Confirmed.");
+		webnotification.setCreatedOn(date8);
+		webnotification.setPhoneNumber(person1.getPhone());	
+		
+		vehicleReservation1.setNotification(new ArrayList<>());
+		vehicleReservation1.getNotification().add(webnotification);
+		vehicleReservation1.getNotification().add(mobilenotification);
+		
+		
+		billRepo.save(bill1);
+		
+		billItemRepo.save(billItem1);
+		billItemRepo.save(billItem2);
+		
+		//paymentRepo.save(payment1);
+		
+		vehicleReservationImpl.makeReservation(vehicleReservation1);
+
+		//additionalDriverRepo.save(additionaldriver1);
+		
+		//notificationRepo.save(mobilenotification);
+		//notificationRepo.save(webnotification);
+		
+		
+	}
+	
+	@Test
+	void updatingReservation() throws Exception{
+		makingReservation();
+		
+		VehicleReservation vehicleReservation1 = new VehicleReservation();
+		
+		Location address2 = new Location();
+		address2.setCity("faridabad");
+		address2.setCountry("India");
+		address2.setState("Haryana");
+		address2.setStreetAddress("#198 bharat vihar, Sector 45, Rohini");
+		address2.setZipcode("160032");
+		
+		
+		//person Creation
+		Person person1=new Person();
+		person1.setName("Thor Odinson");
+		person1.setPhone("9845621781");
+		person1.setEmail("thor123@kries.com");
+		person1.setAddress(address2);
+		
+		Member member1=new Member();
+		member1.setPerson(person1);
+		member1.setASstatus(AccountStatus.Active);
+		member1.setDriverLicenseNumber("485Ad51c");
+		
+		String sDate3 = "12/01/2029";
+		Date date3 = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(sDate3);
+
+		member1.setDriverLicenseExpiry(date3);
+		member1.setPassword("Password@123");
+		
+			//barcodeReader();
+		
+		member1.setVehicle(null);
+		member1.setVehiclereservation(null);
+		memberRepo.save(member1);
+		accountServiceImpl.createAccount(member1);
+		
+		vehicleReservation1.setAccount(member1);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        
+		String sDate4 = "11/04/2022 12:00";
+		Date date4 =  dateFormat.parse(sDate4);
+			
+		String sDate5 = "15/05/2022 12:00";
+		Date date5 =  dateFormat.parse(sDate5);
+		
+		String sDate6 = "17/05/2022 14:00";
+		Date date6 =  dateFormat.parse(sDate6);
+	
+		
+		//dates to check inventory of vehicles
+		vehicleReservation1.setCreationDate(date4);
+		vehicleReservation1.setDueDate(date5);
+		vehicleReservation1.setReturnDate(date6);
+		
+		//vehicle set
+		vehicleReservation1.setVehicle(vehicle1);
+		
+		//location data+status
+		vehicleReservation1.setPickupLocationName("Panchkula");
+		vehicleReservation1.setReturnLocationName("Patiala");
+		
+	/*	AdditionalDriver additionaldriver1 = new AdditionalDriver();
+		additionaldriver1.setDriverID("A2B5C6");
+		additionaldriver1.setPerson(person1);
+		additionaldriver1.setVehicleReservation(vehicleReservation1);*/
+		
+		
+		vehicleReservation1.setAdditionaldriver(null);
+		//vehicleReservation1.getAdditionaldriver().add(additionaldriver1);
+		
+		//TODO 3rd party stuff
+		vehicleReservation1.setService(null);
+		vehicleReservation1.setRentalinsurance(null);
+		vehicleReservation1.setEquipment(null);
+		
+		vehicleReservation1.setReservationNumber("grlv98");
+		
+	
+		BillItem billItem1=new BillItem();
+		billItem1.setService("wipers");
+		billItem1.setAmount(420);
+		
+		BillItem billItem2 = new BillItem();
+		billItem2.setService("Tote bag");
+		billItem2.setAmount(69);
+		
+		
+		Bill bill1 = new Bill();
+		bill1.setBillitem(new ArrayList<>());
+		bill1.getBillitem().add(billItem1);
+		bill1.getBillitem().add(billItem2);
+		bill1.setTotalAmount(billItem1.getAmount()+billItem2.getAmount());	
+		billItem1.setBill(bill1);	
+		billItem2.setBill(bill1);
+		
+		vehicleReservation1.setBill(bill1);
+		
+		
+		String sDate7 = "11/04/2022 13:00";
+		Date date7 =  dateFormat.parse(sDate7);
+		
+		CheckTransaction payment1 = new CheckTransaction();
+		payment1.setBankName("State Bank of India");
+		payment1.setCheckNumber("AZ42F12S854GSD2");
+		payment1.setBill(bill1);
+		payment1.setAmount(bill1.getTotalAmount());
+		payment1.setCreationDate(date7);
+		payment1.setStatus(PaymentStatus.Completed);
+		
+		if(payment1.getStatus().equals(PaymentStatus.Completed)){
+			vehicleReservation1.setRSstatus(ReservationStatus.Confirmed);
+		}
+		
+	
+		String sDate8 = "11/04/2022 15:00";
+		Date date8 =  dateFormat.parse(sDate8);
+		
+		//Creating Notification
+		SMSNotification mobilenotification =new SMSNotification();
+		mobilenotification.setAddress(address2);
+	    mobilenotification.setPhoneNumber(person1.getPhone());
+				
+		mobilenotification.setVehiclereservation(vehicleReservation1);
+		mobilenotification.setBill(bill1);
+		mobilenotification.setContent("This is a mobile Notification: Your rental has been Confirmed.");
+		mobilenotification.setCreatedOn(date8);
+
+		EmailNotification webnotification=new EmailNotification();
+		webnotification.setEmail(person1.getEmail());
+		webnotification.setVehiclereservation(vehicleReservation1);
+		webnotification.setBill(bill1);
+		webnotification.setContent("This is an Email Notification: Your rental has been Confirmed.");
+		webnotification.setCreatedOn(date8);
+		webnotification.setPhoneNumber(person1.getPhone());	
+		
+		vehicleReservation1.setNotification(new ArrayList<>());
+		vehicleReservation1.getNotification().add(webnotification);
+		vehicleReservation1.getNotification().add(mobilenotification);
+		
+		
+		billRepo.save(bill1);
+		
+		billItemRepo.save(billItem1);
+		billItemRepo.save(billItem2);
+		
+		//paymentRepo.save(payment1);
+		
+		vehicleReservationImpl.updateReservation(vehicleReservation1);
+	}
+	
+	@Test
+	void cancellingReservation() throws Exception  {  
+		
+		makingReservation();
+		vehicleReservationImpl.cancelReservation("grlv98");
+		
+	}
+	
+	
+
 }
-
-
  

@@ -1,5 +1,7 @@
 package com.intern.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.intern.DAO.AccountRepository;
 import com.intern.DAO.CarRentalLocationRepository;
 import com.intern.DAO.CarRentalSystemRepository;
@@ -17,41 +19,27 @@ import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.carRental.primary.vehicletypes.Car;
 import com.intern.services.AccountServices;
 
+@Service
 public class AccountServiceImpl implements AccountServices {
 	
+	@Autowired
 	private AccountRepository accountRepo;
+	@Autowired
 	private MemberRepository memberRepo;
+	@Autowired
 	private ReceptionistRepository receptionistRepo;
 	
 	//supplementary
+	@Autowired
 	private VehicleRepository vehicleRepo;
+	@Autowired
 	private CarRentalSystemRepository carRentalSystemRepo;
+	@Autowired
 	private CarRentalLocationRepository carRentalLocationRepo;
+	@Autowired
 	private ParkingStallRepository parkingStallRepo;
-	
-		
-	public AccountServiceImpl(AccountRepository accountRepo,
-			  MemberRepository memberRepo,
-			  ReceptionistRepository receptionistRepo,
-			  CarRentalLocationRepository carRentalLocationRepo,
-			  CarRentalSystemRepository carRentalSystemRepo,
-			  ParkingStallRepository parkingStallRepo,
-			  VehicleRepository vehicleRepo) 
-	{
-		super();
-
-		this.accountRepo=accountRepo;
-		this.memberRepo=memberRepo;
-		this.receptionistRepo=receptionistRepo;
-		
-		this.carRentalLocationRepo = carRentalLocationRepo;
-		this.carRentalSystemRepo = carRentalSystemRepo;
-		this.parkingStallRepo = parkingStallRepo;
-		
-		this.vehicleRepo = vehicleRepo;
-		
-	}
-	
+	//@Autowired
+	//private PersonRepository personRepo;
 	
 	@Override
 	public void createAccount(Account account) {
@@ -67,14 +55,14 @@ public class AccountServiceImpl implements AccountServices {
 		}
 	}
 
+
 	@Override
 	public void updateAccount(Account updatedAccount) {
 		// TODO use this to create these services
+		
 		if (updatedAccount instanceof Member) {
-			
+			Member oldMember =(Member) accountRepo.findByPersonEmail(updatedAccount.getPerson().getEmail());
 			Member newMember = (Member) updatedAccount;
-			Member oldMember = (Member) accountRepo.findByPerson(updatedAccount.getPerson().getEmail());
-			
 			
 			oldMember.setPerson(newMember.getPerson());
 			
@@ -94,8 +82,9 @@ public class AccountServiceImpl implements AccountServices {
 		}
 		
 		if (updatedAccount instanceof Receptionist) {
+			
 			Receptionist newReceptionist = (Receptionist) updatedAccount;
-			Receptionist oldReceptionist = (Receptionist)accountRepo.findByPerson(updatedAccount.getPerson().getEmail());
+			Receptionist oldReceptionist =(Receptionist) accountRepo.findByPersonEmail(updatedAccount.getPerson().getEmail());
 			
 
 			oldReceptionist.setPerson(newReceptionist.getPerson());
@@ -111,43 +100,26 @@ public class AccountServiceImpl implements AccountServices {
 			
 			receptionistRepo.save(oldReceptionist);
 			System.out.println("Receptionist saved");
-			
 		}
 			
 	}
-
+	
+	
 	@Override
 	public void cancelAccount(String accountEmail) {
-		// TODO use this to create these services
 		
-		/*
-		Object vehicle= vehicleRepo.findByBarcode(barcode);
-		
-		if (vehicle instanceof Car) {
-			
-			Car newVehicle = (Car) vehicle;
-			ParkingStall parkingStall= newVehicle.getParkingstall();
-			CarRentalLocation carRentalLocation= newVehicle.getCarRentalLocation();
-			CarRentalSystem carRentalSystem = carRentalLocation.getCarRentalSystem();
-			
-		//for testing
-		
-			//System.out.println("ID:"+parkingStall.getId());
-			vehicleRepo.deleteById(newVehicle.getId());
-			
-			//System.out.println("ID_location:"+carRentalLocation.getId());
-			carRentalLocationRepo.deleteById(carRentalLocation.getId());
-			
-			//System.out.println("ID_system:"+carRentalSystem.getId());
-			carRentalSystemRepo.deleteById(carRentalSystem.getId());
-			
-			//System.out.println("ID_parkingStall:"+parkingStall.getId());
-			parkingStallRepo.deleteById(parkingStall.getId());
-			
-		}*/
 
+		Object account = accountRepo.findByPersonEmail(accountEmail);
 		
+		if (account instanceof Member) {
+			Member member = (Member) account;
+			accountRepo.deleteById(member.getId());
+		}
+		if (account instanceof Receptionist) {
+			Receptionist receptionist = (Receptionist) account;
+			accountRepo.deleteById(receptionist.getId());
+		}
+		System.out.println("Account Cancelled");		
 	}
-	
-	
+
 }

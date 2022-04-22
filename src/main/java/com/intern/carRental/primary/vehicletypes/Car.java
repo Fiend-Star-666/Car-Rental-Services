@@ -43,4 +43,11 @@ public class Car extends Vehicle {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return "Car [id=" + id + ", type=" + type + ", toString()=" + super.toString() + "]";
+	}
+
+	
+
 }

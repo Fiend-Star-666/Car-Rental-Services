@@ -23,10 +23,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+//@Inheritance(strategy=InheritanceType.JOINED)  
 @Getter
 @Setter
 @Entity
-//@Inheritance(strategy=InheritanceType.JOINED)  
 public abstract class Vehicle {
 	
 	@Id	
@@ -68,13 +68,14 @@ public abstract class Vehicle {
 	
 	public abstract Boolean returnVehicle();
 
+	/*
 	@Override
 	public String toString() {
-		return "Vehicle [id=" + id + ", licenseNumber=" + licenseNumber + ", stockNumber=" + stockNumber
+		return "Vehicle [licenseNumber=" + licenseNumber + ", stockNumber=" + stockNumber
 				+ ", passengerCapacity=" + passengerCapacity + ", hasSunroof=" + hasSunroof + ", model=" + model
 				+ ", make=" + make + ", manufacturingYear=" + manufacturingYear + ", mileage=" + mileage + ", barcode="
 				+ barcode + ", status=" + status + ", carRentalLocation=" + carRentalLocation.toString() +  ", parkingstall=" + parkingstall.toString() + "]";
-	}
+	}*/
 	
 	
 }
