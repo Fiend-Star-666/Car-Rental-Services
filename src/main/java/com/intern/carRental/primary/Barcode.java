@@ -1,6 +1,6 @@
 package com.intern.carRental.primary;
-import java.util.*;
 
+import java.util.*;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -26,7 +26,6 @@ public class Barcode {
 	private Vehicle vehicle;
 	
 	public Boolean isActive(){
-		//TODO isActive
-		return null;
+		return active;
 	}
 }

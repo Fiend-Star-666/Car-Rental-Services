@@ -24,9 +24,10 @@ public class Member extends Account {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private int id;
- 	
+
  	private String driverLicenseNumber;
  	private Date driverLicenseExpiry;
+
  	
  	public List<VehicleReservation> getReservations(){
 		//TODO getreservation
@@ -49,5 +50,18 @@ public class Member extends Account {
 	public ArrayList<String> searchByModel(String model) {
 		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
+
+	@Override
+	public Boolean isAccActive() {
+		return true;
+	}
+
+	
+
+
+
+
+	
+	
 }

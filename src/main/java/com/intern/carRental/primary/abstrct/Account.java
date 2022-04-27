@@ -31,8 +31,10 @@ public abstract class Account implements Search{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)  
 	private int id;
-	
 	private String password;
+	private Boolean accActive;
+    
+    private String securityRoles;	//security
 	
 	@Enumerated(EnumType.STRING)
 	private AccountStatus ASstatus;
@@ -47,5 +49,8 @@ public abstract class Account implements Search{
 	private List<VehicleReservation> vehiclereservation;
 	
 	public abstract Boolean resetPassword();
+
+	public abstract Boolean isAccActive();
+
 	
 }

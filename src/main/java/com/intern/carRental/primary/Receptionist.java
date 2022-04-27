@@ -23,8 +23,10 @@ public class Receptionist extends Account{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private int id;
-	
 	private Date dateJoined;
+	
+    private boolean active;	//security
+
 	
 	public void searchMember(String Member) {
 		//TODO searchmember
@@ -47,4 +49,10 @@ public class Receptionist extends Account{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Boolean isAccActive() {
+		return active;
+	}
+
 }

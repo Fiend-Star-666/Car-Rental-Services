@@ -63,6 +63,7 @@ public class AccountServiceImpl implements AccountServices {
 		
 		if (updatedAccount instanceof Member) {
 			Member oldMember =(Member) accountRepo.findByPersonEmail(updatedAccount.getPerson().getEmail());
+			
 			Member newMember = (Member) updatedAccount;
 			
 			oldMember.setPerson(newMember.getPerson());
