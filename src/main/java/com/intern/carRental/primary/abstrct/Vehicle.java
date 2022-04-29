@@ -68,14 +68,14 @@ public abstract class Vehicle {
 	
 	public abstract Boolean returnVehicle();
 
-	/*
+	
 	@Override
 	public String toString() {
-		return "Vehicle [licenseNumber=" + licenseNumber + ", stockNumber=" + stockNumber
+		return "Vehicle [numberPlate=" + numberPlate + ", stockNumber=" + stockNumber
 				+ ", passengerCapacity=" + passengerCapacity + ", hasSunroof=" + hasSunroof + ", model=" + model
 				+ ", make=" + make + ", manufacturingYear=" + manufacturingYear + ", mileage=" + mileage + ", barcode="
-				+ barcode + ", status=" + status + ", carRentalLocation=" + carRentalLocation.toString() +  ", parkingstall=" + parkingstall.toString() + "]";
-	}*/
+				+ barcode + ", status=" + status + ", parkingstall=" + parkingstall.toString() + "]";
+	}
 	
 	
 }

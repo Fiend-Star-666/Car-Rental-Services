@@ -1395,4 +1395,50 @@ public class ComplexTesting {
 		
 	}
 	
+	@Test
+	void addvehicleviapostman(){
+		
+		carVehicle1 = new Car();
+			
+		carVehicle1.setType(CarType.Premium);
+			carVehicle1.setNumberPlate("ABCD12345");
+			carVehicle1.setStockNumber("XXXO09");
+			carVehicle1.setPassengerCapacity(4);
+			carVehicle1.setBarcode("1111152");
+			carVehicle1.setHasSunroof(true);
+			carVehicle1.setStatus(VehicleStatus.Available);
+			carVehicle1.setModel("Mustang");
+			carVehicle1.setMake("Ford");
+			carVehicle1.setManufacturingYear(2015);
+			carVehicle1.setMileage(12);
+			//carRentalLocation1=new CarRentalLocation();
+			//carVehicle1.setCarRentalLocation(carRentalLocation1);
+			//	carRentalSystem1=new CarRentalSystem();
+			//	carRentalSystem1.setName("vehicle1");
+			//	carRentalSystem1.setCarRentalLocation(new ArrayList());
+								
+			//		carRentalSystem1.getCarRentalLocation().add(carRentalLocation1);
+					
+			//		carRentalSystemRepo.save(carRentalSystem1);
+					
+			//	carRentalLocation1.setCarRentalSystem(carRentalSystem1);
+			//	carRentalLocation1.setVehicle(new ArrayList<>());
+			//	carRentalLocation1.getVehicle().add(carVehicle1);
+			//	carRentalLocation1.setName("Pickup Location");
+			//	carRentalLocation1.setAddress(address1);
+			//		carRentalLocationRepo.save(carRentalLocation1);
+					
+			//		carVehicle1.getCarRentalLocation().setCarRentalSystem(carRentalSystem1);
+				
+			//	carParkingStallV1 = new ParkingStall();
+			//	carParkingStallV1.setLocationIdentifier("12AS");
+			//	carParkingStallV1.setStallNumber("22");
+			//parkingStallRepo.save(carParkingStallV1);
+				
+			//carVehicle1.setParkingstall(carParkingStallV1);
+			carVehicle1.setVehicle_log(null);
+			
+			carVehicle1.setVehiclereservation(new ArrayList<>());
+			vehicleServiceImpl.addVehicle(carVehicle1);
+	}
 }
