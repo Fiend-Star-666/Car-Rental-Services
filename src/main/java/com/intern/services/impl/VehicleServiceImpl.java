@@ -59,6 +59,7 @@ public class VehicleServiceImpl implements VehicleServices {
 		if (vehicle instanceof Car) {
 			Car newVehicle = (Car) vehicle;
 			vehicleRepo.save(newVehicle);
+			
 		}
 
 		if (vehicle instanceof Motorcycle) {
@@ -80,6 +81,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			Van newVehicle = (Van) vehicle;
 			vehicleRepo.save(newVehicle);
 		}
+		
 	}
 
 	// TODO correct it
