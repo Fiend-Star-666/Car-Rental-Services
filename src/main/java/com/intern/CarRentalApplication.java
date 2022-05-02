@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.intern.DAO.AdditionalDriverRepository;
 import com.intern.DAO.BarcodeReaderRepository;
 import com.intern.DAO.BarcodeRepository;
@@ -46,6 +48,7 @@ import com.intern.primary.simplePOJO.Person;
 import java.sql.*;
 
 @SpringBootApplication
+@CrossOrigin
 public class CarRentalApplication {
 
 	public static void main(String[] args) {

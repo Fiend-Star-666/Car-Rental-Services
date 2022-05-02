@@ -315,6 +315,9 @@ public class ServicesTesting {
 		vehicle3.setBarcode("7157r77");
 		vehicle3.setStatus(VehicleStatus.Lost);
 		vehicle3.setType(CarType.Economy);
+		System.out.println(vehicle2.getId()+":vehicle to be updated");
+		
+		vehicle3.setId(vehicle2.getId());
 		
 	
 		//carRentalLocation();
@@ -333,7 +336,9 @@ public class ServicesTesting {
 		
 		//----VehicleServiceImpl vehicleServiceImpl2 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		vehicleServiceImpl.updateVehicle(vehicle3);
-		 
+		System.out.println(vehicle3.getId()+":new2");
+		System.out.println(vehicle3.getId()+":new3");
+
 	}
 	
 	
@@ -341,8 +346,8 @@ public class ServicesTesting {
 	void removingVehicle() {
 		addingvehicle();
 		
-		VehicleServiceImpl vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
-		vehicleServiceImpl1.removeVehicle("7157r77");
+		//vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		vehicleServiceImpl.removeVehicle("7157r77");
 		System.out.println("Removed");
 	}
 	

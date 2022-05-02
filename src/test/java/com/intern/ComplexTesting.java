@@ -335,7 +335,7 @@ public class ComplexTesting {
 				carRentalLocation1.setAddress(address1);
 					carRentalLocationRepo.save(carRentalLocation1);
 					
-					carVehicle1.getCarRentalLocation().setCarRentalSystem(carRentalSystem1);
+					//carVehicle1.getCarRentalLocation().setCarRentalSystem(carRentalSystem1);
 				
 				carParkingStallV1 = new ParkingStall();
 				carParkingStallV1.setLocationIdentifier("12AS");

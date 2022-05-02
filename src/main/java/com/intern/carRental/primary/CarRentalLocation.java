@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +31,7 @@ public class CarRentalLocation {
 	@Embedded
 	private Location address;
 	
-	@OneToMany(mappedBy = "carRentalLocation")
+	@OneToMany(mappedBy = "carRentalLocation", fetch = FetchType.LAZY)
 	private List<Vehicle> vehicle;
 	
 	
@@ -40,8 +41,16 @@ public class CarRentalLocation {
 
 	@Override
 	public String toString() {
+		return "CarRentalLocation [id=" + id + ", name=" + name + ", address=" + address + ", vehicle=" + vehicle
+				+ ", carRentalSystem=" + carRentalSystem + "]";
+	}
+
+	/*
+	@Override
+	public String toString() {
 		return "CarRentalLocation [id=" + id + ", name=" + name + ", address=" + address + ", carRentalSystem=" + carRentalSystem.toString() + "]";
 	}
+	*/
 
 	// public Location getLocation() {
 	// return address;

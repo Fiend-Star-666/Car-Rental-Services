@@ -87,14 +87,15 @@ public class VehicleServiceImpl implements VehicleServices {
 	// TODO correct it
 	@Override
 	public void updateVehicle(Vehicle updatedVehicle) {
-		
-
+		//Vehicle vehicleOld = vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
+		vehicleRepo.save(updatedVehicle);
+		/*
 		if(updatedVehicle instanceof Car){
 			
 			Car vehicleLatest = (Car) updatedVehicle;
 			Car vehicleOld = (Car)vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
-
-			vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
+			vehicleOld=vehicleLatest;
+			/*vehicleOld.setNumberPlate(vehicleLatest.getNumberPlate());
 			vehicleOld.setStockNumber(vehicleLatest.getStockNumber());
 			vehicleOld.setPassengerCapacity(vehicleLatest.getPassengerCapacity());
 			vehicleOld.setHasSunroof(vehicleLatest.getHasSunroof());
@@ -106,6 +107,8 @@ public class VehicleServiceImpl implements VehicleServices {
 			vehicleOld.setStatus(vehicleLatest.getStatus());
 			vehicleOld.setCarRentalLocation(vehicleLatest.getCarRentalLocation());
 			vehicleOld.setParkingstall(vehicleLatest.getParkingstall());
+			
+			*-/
 			vehicleRepo.save(vehicleOld);
 			
 			System.out.println("car updated");
@@ -191,6 +194,7 @@ public class VehicleServiceImpl implements VehicleServices {
 			vehicleOld.setParkingstall(vehicleLatest.getParkingstall());
 			vehicleRepo.save(vehicleOld);
 			}
+			*/
 	}
 
 	@Override
@@ -200,76 +204,84 @@ public class VehicleServiceImpl implements VehicleServices {
 		if (vehicle instanceof Car) {
 			
 			Car newVehicle = (Car) vehicle;
+			/*
 			ParkingStall parkingStall= newVehicle.getParkingstall();
 			CarRentalLocation carRentalLocation= newVehicle.getCarRentalLocation();
 			CarRentalSystem carRentalSystem = carRentalLocation.getCarRentalSystem();
-			
+			*/
 		//for testing
 		
 			//System.out.println("ID:"+parkingStall.getId());
 			vehicleRepo.deleteById(newVehicle.getId());
 			
 			//System.out.println("ID_location:"+carRentalLocation.getId());
-			carRentalLocationRepo.deleteById(carRentalLocation.getId());
+			//carRentalLocationRepo.deleteById(carRentalLocation.getId());
 			
 			//System.out.println("ID_system:"+carRentalSystem.getId());
-			carRentalSystemRepo.deleteById(carRentalSystem.getId());
+		//carRentalSystemRepo.deleteById(carRentalSystem.getId());
 			
 			//System.out.println("ID_parkingStall:"+parkingStall.getId());
-			parkingStallRepo.deleteById(parkingStall.getId());
+			//parkingStallRepo.deleteById(parkingStall.getId());
 			
 		}
 
 		if (vehicle instanceof Motorcycle) {
 			Motorcycle newVehicle = (Motorcycle) vehicle;
-			
+			vehicleRepo.deleteById(newVehicle.getId());
+			/*
 			ParkingStall parkingStall= newVehicle.getParkingstall();
 			CarRentalLocation carRentalLocation= newVehicle.getCarRentalLocation();
 			CarRentalSystem carRentalSystem = carRentalLocation.getCarRentalSystem();
 			
 			vehicleRepo.deleteById(newVehicle.getId());
 			carRentalLocationRepo.deleteById(carRentalLocation.getId());
-			carRentalSystemRepo.deleteById(carRentalSystem.getId());
-			parkingStallRepo.deleteById(parkingStall.getId());
+			//carRentalSystemRepo.deleteById(carRentalSystem.getId());
+			parkingStallRepo.deleteById(parkingStall.getId());*/
 		}
 
 		if (vehicle instanceof Truck) {
 			Truck newVehicle = (Truck) vehicle;
-			
+			vehicleRepo.deleteById(newVehicle.getId());
+			/*
 			ParkingStall parkingStall= newVehicle.getParkingstall();
 			CarRentalLocation carRentalLocation= newVehicle.getCarRentalLocation();
 			CarRentalSystem carRentalSystem = carRentalLocation.getCarRentalSystem();
 			
 			vehicleRepo.deleteById(newVehicle.getId());
 			carRentalLocationRepo.deleteById(carRentalLocation.getId());
-			carRentalSystemRepo.deleteById(carRentalSystem.getId());
+			//carRentalSystemRepo.deleteById(carRentalSystem.getId());
 			parkingStallRepo.deleteById(parkingStall.getId());
+			*/
 		}
 
 		if (vehicle instanceof SUV) {
 			SUV newVehicle = (SUV) vehicle;
-			
+			vehicleRepo.deleteById(newVehicle.getId());
+			/*
 			ParkingStall parkingStall= newVehicle.getParkingstall();
 			CarRentalLocation carRentalLocation= newVehicle.getCarRentalLocation();
 			CarRentalSystem carRentalSystem = carRentalLocation.getCarRentalSystem();
 			
 			vehicleRepo.deleteById(newVehicle.getId());
 			carRentalLocationRepo.deleteById(carRentalLocation.getId());
-			carRentalSystemRepo.deleteById(carRentalSystem.getId());
+			//carRentalSystemRepo.deleteById(carRentalSystem.getId());
 			parkingStallRepo.deleteById(parkingStall.getId());
+			*/
 		}
 
 		if (vehicle instanceof Van) {
 			Van newVehicle = (Van) vehicle;
-			
+			vehicleRepo.deleteById(newVehicle.getId());
+			/*
 			ParkingStall parkingStall= newVehicle.getParkingstall();
 			CarRentalLocation carRentalLocation= newVehicle.getCarRentalLocation();
 			CarRentalSystem carRentalSystem = carRentalLocation.getCarRentalSystem();
 			
 			vehicleRepo.deleteById(newVehicle.getId());
 			carRentalLocationRepo.deleteById(carRentalLocation.getId());
-			carRentalSystemRepo.deleteById(carRentalSystem.getId());
+			//carRentalSystemRepo.deleteById(carRentalSystem.getId());
 			parkingStallRepo.deleteById(parkingStall.getId());
+			*/
 		}		
 	}
 

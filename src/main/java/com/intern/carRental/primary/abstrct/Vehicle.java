@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,8 @@ import com.intern.carRental.primary.ParkingStall;
 import com.intern.carRental.primary.VehicleLog;
 import com.intern.carRental.primary.VehicleReservation;
 import com.intern.primary.enums.VehicleStatus;
+
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -51,7 +54,8 @@ public abstract class Vehicle {
 	@Enumerated(EnumType.STRING)
 	private VehicleStatus status;
 	
-	@ManyToOne(optional = true)
+	@Getter(value = AccessLevel.NONE)
+	@ManyToOne(optional = true,fetch = FetchType.LAZY)
 	private CarRentalLocation carRentalLocation;
 	
 	@OneToMany(mappedBy = "vehicle")
@@ -68,7 +72,16 @@ public abstract class Vehicle {
 	
 	public abstract Boolean returnVehicle();
 
-	
+	@Override
+	public String toString() {
+		return "Vehicle [id=" + id + ", numberPlate=" + numberPlate + ", stockNumber=" + stockNumber
+				+ ", passengerCapacity=" + passengerCapacity + ", hasSunroof=" + hasSunroof + ", model=" + model
+				+ ", make=" + make + ", manufacturingYear=" + manufacturingYear + ", mileage=" + mileage + ", barcode="
+				+ barcode + ", status=" + status + ", carRentalLocation=" + carRentalLocation + ", vehicle_log="
+				+ vehicle_log + ", vehiclereservation=" + vehiclereservation + ", parkingstall=" + parkingstall + "]";
+	}
+
+	/*
 	@Override
 	public String toString() {
 		return "Vehicle [numberPlate=" + numberPlate + ", stockNumber=" + stockNumber
@@ -76,6 +89,6 @@ public abstract class Vehicle {
 				+ ", make=" + make + ", manufacturingYear=" + manufacturingYear + ", mileage=" + mileage + ", barcode="
 				+ barcode + ", status=" + status + ", parkingstall=" + parkingstall.toString() + "]";
 	}
-	
+	*/
 	
 }
