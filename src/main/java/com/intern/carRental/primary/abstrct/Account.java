@@ -12,6 +12,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.springframework.context.annotation.Lazy;
+
 import com.intern.carRental.primary.VehicleReservation;
 import com.intern.carRental.primary.intrfces.Search;
 import com.intern.primary.enums.AccountStatus;
@@ -41,7 +44,8 @@ public abstract class Account implements Search{
 
 	@Embedded
 	private Person person;
-
+	
+	@Lazy
 	@OneToOne(targetEntity = Vehicle.class)
 	private Vehicle vehicle;
 	

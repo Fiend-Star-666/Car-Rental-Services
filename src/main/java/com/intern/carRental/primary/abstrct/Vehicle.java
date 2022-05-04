@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.springframework.data.relational.core.mapping.Embedded.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.CarRentalLocation;
 import com.intern.carRental.primary.ParkingStall;
 import com.intern.carRental.primary.VehicleLog;
@@ -31,7 +33,9 @@ import lombok.ToString;
 @Setter
 @Entity
 public abstract class Vehicle {
-	
+	public Vehicle() {
+		super();
+	}
 	@Id	
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int id;
@@ -54,6 +58,7 @@ public abstract class Vehicle {
 	@Enumerated(EnumType.STRING)
 	private VehicleStatus status;
 	
+	//@JsonManagedReference 
 	@Getter(value = AccessLevel.NONE)
 	@ManyToOne(optional = true,fetch = FetchType.LAZY)
 	private CarRentalLocation carRentalLocation;
@@ -61,7 +66,8 @@ public abstract class Vehicle {
 	@OneToMany(mappedBy = "vehicle")
 	private List<VehicleLog> vehicle_log;
 	
-	@OneToMany(mappedBy="vehicle")
+	//@JsonManagedReference
+	@OneToMany(mappedBy="vehicle",fetch = FetchType.LAZY)
 	private List<VehicleReservation> vehiclereservation;
 	
 	@Nullable

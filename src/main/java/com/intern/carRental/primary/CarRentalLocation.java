@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.primary.simplePOJO.Location;
 
@@ -31,10 +33,11 @@ public class CarRentalLocation {
 	@Embedded
 	private Location address;
 	
+	//@JsonBackReference 
 	@OneToMany(mappedBy = "carRentalLocation", fetch = FetchType.LAZY)
 	private List<Vehicle> vehicle;
 	
-	
+	//@JsonManagedReference
 	@ManyToOne(optional = false)
 	private CarRentalSystem carRentalSystem;
 

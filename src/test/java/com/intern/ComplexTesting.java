@@ -1327,6 +1327,11 @@ public class ComplexTesting {
 	}
 	
 	@Test
+	void smsTesting() {
+		//TODO Create sms notification api
+	}
+	
+	@Test
 	void accident() throws Exception{
 		
 		/*	
@@ -1392,7 +1397,7 @@ public class ComplexTesting {
 		 	
 		 	Send a Vehicle return Notification
 		 */
-		
+		//TODO
 	}
 	
 	@Test

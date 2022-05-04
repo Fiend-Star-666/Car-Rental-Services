@@ -37,7 +37,10 @@ public class VehicleServiceImpl implements VehicleServices {
 	
 	@Autowired
 	private ParkingStallRepository parkingStallRepo;
-	/*
+	
+	
+	
+	/* autowired works
 	public VehicleServiceImpl(CarRentalLocationRepository carRentalLocationRepo,
 			  				  CarRentalSystemRepository carRentalSystemRepo,
 			  				  ParkingStallRepository parkingStallRepo,
@@ -55,7 +58,8 @@ public class VehicleServiceImpl implements VehicleServices {
 	@Override
 	public void addVehicle(Vehicle vehicle) {
 		// Object keyword used to generalize
-
+		vehicleRepo.save(vehicle);
+		/*
 		if (vehicle instanceof Car) {
 			Car newVehicle = (Car) vehicle;
 			vehicleRepo.save(newVehicle);
@@ -81,14 +85,20 @@ public class VehicleServiceImpl implements VehicleServices {
 			Van newVehicle = (Van) vehicle;
 			vehicleRepo.save(newVehicle);
 		}
-		
+		*/
 	}
 
 	// TODO correct it
 	@Override
 	public void updateVehicle(Vehicle updatedVehicle) {
-		//Vehicle vehicleOld = vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
+		//when id is given
 		vehicleRepo.save(updatedVehicle);
+		
+		
+		
+		//when id is not given
+		//Vehicle vehicleOld = vehicleRepo.findByBarcode(updatedVehicle.getBarcode());
+
 		/*
 		if(updatedVehicle instanceof Car){
 			

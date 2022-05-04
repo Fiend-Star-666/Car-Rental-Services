@@ -403,9 +403,9 @@ public class ServicesTesting {
 		
 		vehicle4.setParkingstall(parkingstall3);
 		
-		VehicleServiceImpl vehicleServiceImpl1 = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		/// vehicleServiceImpl = new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
-		vehicleServiceImpl1.addVehicle(vehicle4);
+		vehicleServiceImpl.addVehicle(vehicle4);
 		
 		System.out.println("added");
 		
@@ -464,9 +464,9 @@ public class ServicesTesting {
 		
 		vehicle5.setParkingstall(parkingstall4);
 		
-		VehicleServiceImpl vehicleServiceImpl4 =new VehicleServiceImpl();//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
+		//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
 		
-		vehicleServiceImpl4.addVehicle(vehicle5);
+		vehicleServiceImpl.addVehicle(vehicle5);
 		
 		System.out.println("added");
 		
@@ -910,6 +910,16 @@ public class ServicesTesting {
 		
 		
 	}
+	
+	@Test
+	void cancellingReservation() throws Exception  {  
+		
+		makingReservation();
+		vehicleReservationImpl.cancelReservation("grlv98");
+		
+	}
+	
+
 	/*
 	@Test
 	void updatingReservation() {
@@ -1039,14 +1049,4 @@ public class ServicesTesting {
 		
 		
 	}*/
-	
-	@Test
-	void cancellingReservation() throws Exception  {  
-		
-		makingReservation();
-		vehicleReservationImpl.cancelReservation("grlv98");
-		
-	}
-	
- 
 }

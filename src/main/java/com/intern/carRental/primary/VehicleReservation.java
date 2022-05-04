@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.springframework.context.annotation.Lazy;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.intern.carRental.primary.abstrct.Account;
 import com.intern.carRental.primary.abstrct.Equipment;
 import com.intern.carRental.primary.abstrct.Notification;
@@ -45,7 +49,9 @@ public class VehicleReservation {
 	
 	@OneToMany(mappedBy = "vehicleReservation")
 	private List<AdditionalDriver> additionaldriver;
-
+	
+	//@JsonBackReference
+	@Lazy
 	@ManyToOne
 	private Vehicle vehicle;
 	

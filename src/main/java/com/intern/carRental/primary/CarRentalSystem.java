@@ -4,6 +4,9 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.*;
@@ -17,6 +20,7 @@ public class CarRentalSystem {
 	private int id;
 	private String name;
 	
+	//@JsonBackReference
 	@OneToMany(mappedBy="carRentalSystem")
 	private List<CarRentalLocation> carRentalLocation ;
 
