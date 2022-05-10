@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.intern.primary.simplePOJO.Person;
 import lombok.*;
 
@@ -18,7 +20,7 @@ public class AdditionalDriver {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)  
 	private int id;
 	
- 
+	@JsonBackReference(value = "addDriver")
 	@ManyToOne(optional = false)
 	private VehicleReservation vehicleReservation;
 	

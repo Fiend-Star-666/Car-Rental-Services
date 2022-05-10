@@ -10,6 +10,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.Bill;
 import com.intern.carRental.primary.VehicleReservation;
 
@@ -36,6 +37,7 @@ public abstract class Notification {
 	@OneToOne
 	private Bill bill;
 	
+	@JsonManagedReference(value = "Notif")
 	@ManyToOne
 	private VehicleReservation vehiclereservation; 
 	

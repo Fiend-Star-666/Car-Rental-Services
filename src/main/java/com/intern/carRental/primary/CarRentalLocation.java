@@ -33,14 +33,13 @@ public class CarRentalLocation {
 	@Embedded
 	private Location address;
 	
-	//@JsonBackReference 
-	@OneToMany(mappedBy = "carRentalLocation", fetch = FetchType.LAZY)
+	@JsonManagedReference(value="CRLocation") 
+	@OneToMany(mappedBy = "carRentalLocation")//, fetch = FetchType.LAZY)
 	private List<Vehicle> vehicle;
 	
-	//@JsonManagedReference
+	@JsonBackReference(value="CRSystem")
 	@ManyToOne(optional = false)
 	private CarRentalSystem carRentalSystem;
-
 
 	@Override
 	public String toString() {
@@ -48,16 +47,5 @@ public class CarRentalLocation {
 				+ ", carRentalSystem=" + carRentalSystem + "]";
 	}
 
-	/*
-	@Override
-	public String toString() {
-		return "CarRentalLocation [id=" + id + ", name=" + name + ", address=" + address + ", carRentalSystem=" + carRentalSystem.toString() + "]";
-	}
-	*/
-
-	// public Location getLocation() {
-	// return address;
-	// TODO getLocation
-	// }
 
 }

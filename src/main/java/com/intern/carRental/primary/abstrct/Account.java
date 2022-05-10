@@ -1,4 +1,4 @@
-package com.intern.carRental.primary.abstrct;
+      package com.intern.carRental.primary.abstrct;
 
 import java.util.List;
 
@@ -15,6 +15,9 @@ import javax.persistence.OneToOne;
 
 import org.springframework.context.annotation.Lazy;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.VehicleReservation;
 import com.intern.carRental.primary.intrfces.Search;
 import com.intern.primary.enums.AccountStatus;
@@ -45,10 +48,12 @@ public abstract class Account implements Search{
 	@Embedded
 	private Person person;
 	
-	@Lazy
+	
+	//@JsonBackReference
 	@OneToOne(targetEntity = Vehicle.class)
 	private Vehicle vehicle;
 	
+	@JsonManagedReference(value = "accVehicle")
 	@OneToMany(mappedBy = "account",fetch = FetchType.EAGER)
 	private List<VehicleReservation> vehiclereservation;
 	

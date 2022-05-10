@@ -1,18 +1,17 @@
 package com.intern;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import com.intern.services.impl.AccountServiceImpl;
 import com.intern.services.impl.VehicleReservationImpl;
 import com.intern.services.impl.VehicleServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import com.intern.DAO.AccountRepository;
 import com.intern.DAO.BarcodeRepository;
 import com.intern.DAO.BillItemRepository;
@@ -25,6 +24,7 @@ import com.intern.DAO.NotificationRepository;
 import com.intern.DAO.ParkingStallRepository;
 import com.intern.DAO.PaymentRepository;
 import com.intern.DAO.ReceptionistRepository;
+import com.intern.DAO.VehicleLogRepository;
 import com.intern.DAO.VehicleRepository;
 import com.intern.DAO.VehicleReservationRepository;
 import com.intern.carRental.primary.AdditionalDriver;
@@ -35,6 +35,7 @@ import com.intern.carRental.primary.CarRentalLocation;
 import com.intern.carRental.primary.CarRentalSystem;
 import com.intern.carRental.primary.Member;
 import com.intern.carRental.primary.ParkingStall;
+import com.intern.carRental.primary.VehicleLog;
 import com.intern.carRental.primary.VehicleReservation;
 import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.carRental.primary.vehicletypes.Car;
@@ -45,6 +46,7 @@ import com.intern.primary.enums.AccountStatus;
 import com.intern.primary.enums.CarType;
 import com.intern.primary.enums.PaymentStatus;
 import com.intern.primary.enums.ReservationStatus;
+import com.intern.primary.enums.VehicleLogType;
 import com.intern.primary.enums.VehicleStatus;
 import com.intern.primary.simplePOJO.Location;
 import com.intern.primary.simplePOJO.Person;
@@ -61,7 +63,7 @@ public class ServicesTesting {
 	Car vehicle3;
 	Barcode barcode1;
 	Location address1;
-	
+	VehicleLog vehicleLog; 
 	
 	@Autowired
 	VehicleServiceImpl vehicleServiceImpl ;//new VehicleServiceImpl(carRentalLocationRepo,carRentalSystemRepo,parkingStallRepo,vehicleRepo);
@@ -116,6 +118,9 @@ public class ServicesTesting {
 	
 	@Autowired
 	private VehicleReservationRepository vehicleReservationRepo;
+	
+	@Autowired
+	private VehicleLogRepository vehicleLogRepo;
 	
 	@Test
  	void carRentalSystem() {
@@ -644,14 +649,18 @@ public class ServicesTesting {
 		List<Car> trialVehicle = carRepo.findByType(CarType.Economy);
 		//System.out.println(trialVehicle.toString());
 		
+		System.out.println("hehe1");
+		/*
 		for(Car var:trialVehicle) {
 			System.out.println(var.toString());
-		}
+		}*/
 		System.out.println("____________________________________________________");
 		ArrayList<Vehicle> arr= vehicleServiceImpl.searchByModel("vista");
 		
+		System.out.println("hehe2");
 		for(Vehicle var:arr) {
-			System.out.println(var.toString());
+			//var.get
+			//System.out.println(var.toString());
 		}
 	}
 	
@@ -916,6 +925,33 @@ public class ServicesTesting {
 		
 		makingReservation();
 		vehicleReservationImpl.cancelReservation("grlv98");
+		
+	}
+	
+	@Test
+	void vehicleLog() throws Exception {
+		
+		
+		vehicle();
+		
+		
+		String sDate9 = "06/05/2022";
+		Date date9 = (Date) new SimpleDateFormat("dd/MM/yyyy").parse(sDate9);
+		
+		vehicleLog = new VehicleLog();
+		vehicleLog.setVehicle(vehicle1);
+		vehicleLog.setType(VehicleLogType.Accident);
+		vehicleLog.setDescription("God's Plan");
+		vehicleLog.setCreationDate(date9);
+		vehicleLogRepo.save(vehicleLog);
+		
+		VehicleLog vehicleLog2 = new VehicleLog();
+		vehicleLog2.setVehicle(vehicle1);
+		vehicleLog2.setType(VehicleLogType.Accident);
+		vehicleLog2.setDescription("God's Plan");
+		vehicleLog2.setCreationDate(date9);
+		vehicleLogRepo.save(vehicleLog2);
+		
 		
 	}
 	

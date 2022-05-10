@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class CarRentalSystem {
 	private int id;
 	private String name;
 	
-	//@JsonBackReference
+	@JsonManagedReference(value="CRSystem")
 	@OneToMany(mappedBy="carRentalSystem")
 	private List<CarRentalLocation> carRentalLocation ;
 

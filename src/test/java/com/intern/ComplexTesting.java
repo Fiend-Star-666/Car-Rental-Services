@@ -1352,6 +1352,7 @@ public class ComplexTesting {
 		 			
 		 	Barcode Reader scans the barcode from the Vehicle
 		 	
+		 	
 		 	Fetch Vehicle Details
 		 	
 		 	check if the Vehicle has been returned within the due date?
@@ -1398,6 +1399,8 @@ public class ComplexTesting {
 		 	Send a Vehicle return Notification
 		 */
 		//TODO
+		
+		
 	}
 	
 	@Test

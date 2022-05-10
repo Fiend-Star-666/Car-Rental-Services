@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.abstrct.Payment;
 
 import lombok.*;
@@ -24,6 +25,7 @@ public class Bill {
 	
 	private double totalAmount;
 	
+	@JsonManagedReference(value = "billItem")
 	@OneToMany(mappedBy="bill")
 	private List<BillItem> billitem;
 	

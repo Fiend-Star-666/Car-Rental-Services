@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.primary.enums.VehicleLogType;
 
@@ -24,14 +26,15 @@ public class VehicleLog {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	private String vehiclelogid;
+	//private String vehiclelogid;
 	
 	@Enumerated(EnumType.STRING)
 	private VehicleLogType type;
 	
-	private String descriptoin;
+	private String description;
 	private Date creationDate;
 	
+	@JsonBackReference(value = "log")
 	@ManyToOne(optional = false)
 	private Vehicle vehicle;
 	

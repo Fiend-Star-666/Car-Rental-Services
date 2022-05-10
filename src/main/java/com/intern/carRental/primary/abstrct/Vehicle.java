@@ -16,19 +16,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.springframework.data.relational.core.mapping.Embedded.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intern.carRental.primary.CarRentalLocation;
 import com.intern.carRental.primary.ParkingStall;
 import com.intern.carRental.primary.VehicleLog;
 import com.intern.carRental.primary.VehicleReservation;
 import com.intern.primary.enums.VehicleStatus;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-//@Inheritance(strategy=InheritanceType.JOINED)  
 @Getter
 @Setter
 @Entity
@@ -58,16 +57,17 @@ public abstract class Vehicle {
 	@Enumerated(EnumType.STRING)
 	private VehicleStatus status;
 	
-	//@JsonManagedReference 
-	@Getter(value = AccessLevel.NONE)
-	@ManyToOne(optional = true,fetch = FetchType.LAZY)
+	@JsonBackReference(value="CRLocation") 
+	@ManyToOne(optional = true)//,fetch = FetchType.LAZY)
 	private CarRentalLocation carRentalLocation;
 	
+	@JsonManagedReference(value = "log")
 	@OneToMany(mappedBy = "vehicle")
 	private List<VehicleLog> vehicle_log;
 	
-	//@JsonManagedReference
-	@OneToMany(mappedBy="vehicle",fetch = FetchType.LAZY)
+	@Nullable
+	@JsonManagedReference(value = "Vehicle")
+	@OneToMany(mappedBy="vehicle")//,fetch = FetchType.LAZY)
 	private List<VehicleReservation> vehiclereservation;
 	
 	@Nullable
@@ -86,15 +86,5 @@ public abstract class Vehicle {
 				+ barcode + ", status=" + status + ", carRentalLocation=" + carRentalLocation + ", vehicle_log="
 				+ vehicle_log + ", vehiclereservation=" + vehiclereservation + ", parkingstall=" + parkingstall + "]";
 	}
-
-	/*
-	@Override
-	public String toString() {
-		return "Vehicle [numberPlate=" + numberPlate + ", stockNumber=" + stockNumber
-				+ ", passengerCapacity=" + passengerCapacity + ", hasSunroof=" + hasSunroof + ", model=" + model
-				+ ", make=" + make + ", manufacturingYear=" + manufacturingYear + ", mileage=" + mileage + ", barcode="
-				+ barcode + ", status=" + status + ", parkingstall=" + parkingstall.toString() + "]";
-	}
-	*/
 	
 }

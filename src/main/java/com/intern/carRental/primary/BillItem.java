@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.*;
 
 @Getter
@@ -21,6 +24,7 @@ public class BillItem {
 	
 	private String service;
 	
+	@JsonBackReference(value = "billItem")
 	@ManyToOne(optional = false)
 	private Bill bill;
 }
