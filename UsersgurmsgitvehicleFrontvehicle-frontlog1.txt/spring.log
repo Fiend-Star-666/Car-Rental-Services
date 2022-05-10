@@ -74,3 +74,6 @@
 2022-05-10 11:42:24.163 DEBUG 23832 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
 2022-05-10 11:42:24.445 DEBUG 23832 --- [restartedMain] o.s.w.s.v.f.FreeMarkerConfigurer         : File system access not preferred: using SpringTemplateLoader
 2022-05-10 11:42:24.456  WARN 23832 --- [restartedMain] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/templates/] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2022-05-10 11:42:24.563  INFO 23832 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-05-10 11:42:24.607  INFO 23832 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-10 11:42:24.616  INFO 23832 --- [restartedMain] com.intern.CarRentalApplication          : Started CarRentalApplication in 5.694 seconds (JVM running for 6.575)
