@@ -27,7 +27,7 @@ public class SMSNotification extends Notification{
 	private Location address;
 
 	@Override
-	public Boolean sendNotification() {
+	public Boolean sendNotification(String Subject, String Body) {
 		// TODO Auto-generated method stub
 		return null;
 	}

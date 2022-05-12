@@ -199,6 +199,14 @@
   	  	<version>9.0.58</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/com.twilio.sdk/twilio -->
+	<dependency>
+    	<groupId>com.twilio.sdk</groupId>
+    	<artifactId>twilio</artifactId>
+    	<version>8.30.0</version>
+	</dependency>
+
+	
 	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
 <!-- <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -214,7 +222,9 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>1.4.2.Final</version>
-    </dependency>  
+    </dependency> 
+
+	
 	</dependencies>
 
 	<build>

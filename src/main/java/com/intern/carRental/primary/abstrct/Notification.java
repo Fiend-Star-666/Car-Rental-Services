@@ -41,7 +41,7 @@ public abstract class Notification {
 	@ManyToOne
 	private VehicleReservation vehiclereservation; 
 	
-	public abstract Boolean sendNotification();
+	public abstract Boolean sendNotification(String str1, String str2);
 	
 
 }

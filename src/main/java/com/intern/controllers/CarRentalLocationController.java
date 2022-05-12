@@ -29,21 +29,21 @@ public class CarRentalLocationController {
 	
 	@CrossOrigin
 	@GetMapping("/carrentallocation/vehicle/view/{id}")
-	public ResponseEntity<CarRentalLocation> getVehicleParkingStallForVehicle(@PathVariable int id) {
+	public ResponseEntity<CarRentalLocation> getCRLocationForVehicle(@PathVariable int id) {
 		CarRentalLocation carRentalLocation=vehicleRepo.findById(id).get().getCarRentalLocation();
 		return ResponseEntity.ok(carRentalLocation);
 	}
 	
 	@CrossOrigin
 	@GetMapping("/carrentallocation/{id}/vehicles")
-	public List<Vehicle> getVehiclesOfCarRentalLocation(@PathVariable int id) {
+	public List<Vehicle> getVehiclesOfCRlLocation(@PathVariable int id) {
 		List<Vehicle> vehicleList=vehicleRepo.findAllByCarRentalLocationId(id);
 		return vehicleList;	
 	}
 	
 	@CrossOrigin
-	@GetMapping("/carrentallocation/view")
-	public List<CarRentalLocation> getCarRentalLocations() {
+	@GetMapping("/carrentallocations/view")
+	public List<CarRentalLocation> getCRLocations() {
 		List<CarRentalLocation> carRentalLocations=carRentalLocationRepo.findAll();
 		return carRentalLocations;
 	}

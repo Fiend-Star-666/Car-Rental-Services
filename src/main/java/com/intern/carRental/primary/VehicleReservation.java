@@ -15,7 +15,9 @@ import javax.persistence.OneToOne;
 import org.springframework.context.annotation.Lazy;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.intern.carRental.primary.abstrct.Account;
 import com.intern.carRental.primary.abstrct.Equipment;
 import com.intern.carRental.primary.abstrct.Notification;
@@ -29,7 +31,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class VehicleReservation {
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
+public class VehicleReservation{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -53,7 +58,7 @@ public class VehicleReservation {
 	@OneToMany(mappedBy = "vehicleReservation")
 	private List<AdditionalDriver> additionaldriver;
 	
-	@JsonBackReference(value = "Vehicle")
+	@JsonManagedReference(value = "Vehicle")
 	@ManyToOne
 	private Vehicle vehicle;
 	
@@ -77,4 +82,16 @@ public class VehicleReservation {
 		// TODO fetchDetails
 		return null;
 	}
+
+	/*
+	@Override
+	public String toString() {
+		return "VehicleReservation [id=" + id + ", reservationNumber=" + reservationNumber + ", creationDate="
+				+ creationDate + ", RSstatus=" + RSstatus + ", dueDate=" + dueDate + ", returnDate=" + returnDate
+				+ ", pickupLocationName=" + pickupLocationName + ", returnLocationName=" + returnLocationName
+				+ ", account=" + account + ", additionaldriver=" + additionaldriver + ", vehicle=" + vehicle + ", bill="
+				+ bill + ", notification=" + notification + ", service=" + service + ", rentalinsurance="
+				+ rentalinsurance + ", equipment=" + equipment + "]";
+	}
+	*/
 }

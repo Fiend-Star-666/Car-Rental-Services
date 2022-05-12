@@ -2,6 +2,7 @@ package com.intern;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.transaction.Transactional;
 
@@ -31,23 +32,31 @@ import com.intern.DAO.VehicleRepository;
 import com.intern.DAO.VehicleReservationRepository;
 import com.intern.carRental.primary.Barcode;
 import com.intern.carRental.primary.BarcodeReader;
+import com.intern.carRental.primary.Bill;
+import com.intern.carRental.primary.BillItem;
 import com.intern.carRental.primary.CarRentalLocation;
 import com.intern.carRental.primary.CarRentalSystem;
 import com.intern.carRental.primary.Member;
 import com.intern.carRental.primary.ParkingStall;
+import com.intern.carRental.primary.VehicleLog;
 import com.intern.carRental.primary.VehicleReservation;
+import com.intern.carRental.primary.abstrct.Notification;
 import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.carRental.primary.vehicletypes.Car;
 import com.intern.carRental.primary.vehicletypes.Motorcycle;
 import com.intern.carRental.primary.vehicletypes.SUV;
 import com.intern.carRental.primary.vehicletypes.Truck;
 import com.intern.carRental.primary.vehicletypes.Van;
-import com.intern.notification.email.simpleTryEmail;
+import com.intern.notification.email.SimpleTryEmail;
+import com.intern.primary.addonServices.CheckTransaction;
+import com.intern.primary.addonServices.EmailNotification;
+import com.intern.primary.addonServices.SMSNotification;
 import com.intern.primary.enums.AccountStatus;
 import com.intern.primary.enums.CarType;
 import com.intern.primary.enums.PaymentStatus;
 import com.intern.primary.enums.ReservationStatus;
 import com.intern.primary.enums.VanType;
+import com.intern.primary.enums.VehicleLogType;
 import com.intern.primary.enums.VehicleStatus;
 import com.intern.primary.simplePOJO.Location;
 import com.intern.primary.simplePOJO.Person;
@@ -137,6 +146,9 @@ public class ComplexTesting {
 	VehicleReservation carVehicle1Reservation;
 	BarcodeReader barCodeReaderVehicle1;
 	ParkingStall carParkingStallV1;
+	Notification webNotification;
+	Notification mobNotification;
+
 	
 //________________________________________________	
 	
@@ -1322,14 +1334,13 @@ public class ComplexTesting {
 		
 	@Test
 	void emailTesting() {
-		simpleTryEmail trial1=new simpleTryEmail();
-		trial1.sending();
+		String Email;
+		SimpleTryEmail trial1=new SimpleTryEmail();
+		//trial1.sending();
 	}
 	
-	@Test
-	void smsTesting() {
-		//TODO Create sms notification api
-	}
+	
+	
 	
 	@Test
 	void accident() throws Exception{
@@ -1399,6 +1410,113 @@ public class ComplexTesting {
 		 	Send a Vehicle return Notification
 		 */
 		//TODO
+		pickingupVehicle();
+		
+		VehicleLogType vehicleLogType;
+		VehicleLog vehicleLog = new VehicleLog();
+		Bill billPuv = new Bill();
+		billPuv.setBillitem(new ArrayList());
+		
+		int lateFine = 400;
+		
+		barCodeReaderVehicle1=new BarcodeReader();
+		barCodeReaderVehicle1.setBarcode(barCarVehicle1);
+		barCodeReaderVehicle1.setRegisteredAt(date2);
+			
+		barCodeReaderVehicle1.setActive(null);	
+			
+		barcodeReaderRepo.save(barCodeReaderVehicle1);
+		
+		barCodeReaderVehicle1.getBarcode();
+		barCarVehicle1.getVehicle();
+		
+		if(carVehicle1Reservation.getReturnDate().after(carVehicle1Reservation.getDueDate())){
+			
+			long diffInMillies = Math.abs(carVehicle1Reservation.getReturnDate().getTime() - carVehicle1Reservation.getDueDate().getTime());
+		    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+			
+			
+			
+			//int dayPassed = carVehicle1Reservation.getDueDate().b - carVehicle1Reservation.getReturnDate().getDay();
+			
+			BillItem billItemLate = new BillItem();
+			billItemLate.setAmount(lateFine* (int)diff);
+			billItemLate.setBill(billPuv);
+			billPuv.getBillitem().add(billItemLate);
+			
+					
+		}
+		
+		if(vehicleLog.getType().equals(VehicleLogType.Accident)){
+			
+			BillItem billItemAccident = new BillItem();
+			billItemAccident.setAmount(1500);
+			billItemAccident.setBill(billPuv);
+			billPuv.getBillitem().add(billItemAccident);
+		}
+		
+		/*
+		 * if(TODO FUEL TANK){ }
+		 */
+		
+		BillItem billItemBasic = new BillItem();
+		billItemBasic.setAmount(25000);
+		billItemBasic.setBill(billPuv);
+			
+		carVehicle1Reservation.setBill(billPuv);
+		
+		double totalPayment = 0;
+		
+		for (BillItem x : billPuv.getBillitem()) {
+			
+			totalPayment+= x.getAmount();
+			
+		}
+		
+		billPuv.setTotalAmount(totalPayment);
+		String Date = "11/04/2022 13:00";
+		Date billCreationDate =  dateFormat.parse(Date);
+		
+		CheckTransaction payment1 = new CheckTransaction();
+		payment1.setBankName("State Bank of India");
+		payment1.setCheckNumber("AZ42F12S854GSD2");
+		payment1.setBill(billPuv);
+		payment1.setAmount(billPuv.getTotalAmount());
+		payment1.setCreationDate(billCreationDate);
+		payment1.setStatus(PaymentStatus.Completed);
+		
+		if(payment1.getStatus().equals(PaymentStatus.Completed)){
+			carVehicle1Reservation.setRSstatus(ReservationStatus.Confirmed);
+		}
+		
+		
+		
+		
+		//TODO create vehicle return transaction
+		
+		carVehicle1.setStatus(VehicleStatus.Available);
+		
+		SMSNotification mobilenotification =new SMSNotification();
+		mobilenotification.setAddress(address1);
+	    mobilenotification.setPhoneNumber(person1.getPhone());
+				
+		mobilenotification.setVehiclereservation(carVehicle1Reservation);
+		mobilenotification.setBill(billPuv);
+		mobilenotification.setContent("This is a mobile Notification: Your return has been Confirmed.");
+		mobilenotification.setCreatedOn(carVehicle1Reservation.getReturnDate());
+
+		EmailNotification webnotification=new EmailNotification();
+		webnotification.setEmail(person1.getEmail());
+		webnotification.setVehiclereservation(carVehicle1Reservation);
+		webnotification.setBill(billPuv);
+		webnotification.setContent("This is an Email Notification: Your rental has been Confirmed.");
+		webnotification.setCreatedOn(carVehicle1Reservation.getReturnDate());
+		webnotification.setPhoneNumber(person1.getPhone());	
+		
+		carVehicle1Reservation.setNotification(new ArrayList<>());
+		carVehicle1Reservation.getNotification().add(webNotification);
+		carVehicle1Reservation.getNotification().add(mobNotification);
+		
 		
 		
 	}
