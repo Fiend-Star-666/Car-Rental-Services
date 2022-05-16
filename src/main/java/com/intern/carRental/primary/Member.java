@@ -42,7 +42,7 @@ public class Member extends Account {
 
 	@Override
 	public ArrayList<String> searchByType(String type) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub	
 		return null;
 	}
 

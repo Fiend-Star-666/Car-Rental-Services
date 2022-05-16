@@ -73,7 +73,7 @@ public abstract class Vehicle {
 	
 	
 	@Nullable
-	@JsonBackReference(value = "Vehicle")
+	@JsonManagedReference(value = "Vehicle")
 	@OneToMany(mappedBy="vehicle")//,fetch = FetchType.LAZY)
 	private List<VehicleReservation> vehiclereservation;
 	

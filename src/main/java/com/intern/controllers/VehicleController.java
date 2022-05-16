@@ -36,6 +36,10 @@ public class VehicleController {
 	}
 
 	/*
+	returning a object and working with it is easier 
+	than response entity because of the child objects
+	can easily be accessed. 
+	 
 	@GetMapping("/vehicle/view/") 
 	public ResponseEntity<List <Vehicle>> getAllVehicles(){
 		List<Vehicle> vehicleList = vehicleRepo.findAll();
@@ -47,15 +51,6 @@ public class VehicleController {
 	@GetMapping("/vehicle/view")
 	public List<Vehicle> getAllVehicles(){
 		return vehicleRepo.findAll();
-	}
-
-	@PutMapping("/vehicle/edit/{id}")
-	public ResponseEntity<Vehicle> editVehicleById(@PathVariable int id){
-		
-		//Vehicle vehicle = vehicleRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(" Vehicle not exist id: " + id));
-	    return null;
-	    //ResponseEntity.ok(vehicle);
-
 	}
 
 
@@ -73,8 +68,13 @@ public class VehicleController {
 		return "deleted";
 	}
 	
-	
-	
+	@PutMapping("/vehicle/edit/{id}")
+	public ResponseEntity<Vehicle> editVehicleById(@PathVariable int id){		
+		//Vehicle vehicle = vehicleRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(" Vehicle not exist id: " + id));
+	    //ResponseEntity.ok(vehicle);
+	    return null;
+	}
+}
 /*
 	@Autowired
 	VehicleRepository vehicleRepo;
@@ -89,7 +89,7 @@ public class VehicleController {
      vehicleServiceImpl.addVehicle(vehicle);
      
      return vehicle;
-     //return vehicleRepo.save(vehicle);
+     	//return vehicleRepo.save(vehicle);
         //return ("<h1>Vehicle added</h1>");    
         //Vehicle vehicle, @RequestParam String numberPlate,@RequestParam String stockNumber, @RequestParam int passangerCapacity,@RequestParam boolean hasSunroof
     }
@@ -135,5 +135,5 @@ public class VehicleController {
 		//vehicleServiceImpl.removeVehicle(id);
 		return "deleted";
 	}
-    */
-}
+	
+*/

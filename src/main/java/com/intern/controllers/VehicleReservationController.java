@@ -60,15 +60,22 @@ public class VehicleReservationController {
 		return vehicleReservation;
 	}
 	
-	@GetMapping("/admin/vehiclereservation/carrentallocation/view/{crLocationID}")
+	/*
+	//TODO
+	@GetMapping("/admin/vehiclereservation/carrentallocation/view/{vehicleId}")
 	public List<List<VehicleReservation>> getVehicleReservationPerLocation(@PathVariable int crLocationID){
 			List<Vehicle> vehicles=carRentalLocationRepo.findById(crLocationID).get().getVehicle();
-			List<List<VehicleReservation>> vehicleReservation=new ArrayList<>();
+			//LisList<VehicleReservation> vehicleReservation=new ArrayList<>();
 			for (Vehicle vehicle : vehicles) {
-				vehicleReservation.add(vehicle.getVehiclereservation());
+				//vehicleReservation.add(vehicle.getVehiclereservation());
 			}
-		return vehicleReservation;
+/*
+ * vehicleReservation: find all
+ * 		Then iterate through the id's of list<vehicle> then form a map of carRentalLocaiton id vs vehicleReservation
+ *-/
+		//return vehicleReservation;
 	}
+	*/
 }
 
 /*

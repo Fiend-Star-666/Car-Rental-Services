@@ -58,7 +58,7 @@ public class VehicleReservation{
 	@OneToMany(mappedBy = "vehicleReservation")
 	private List<AdditionalDriver> additionaldriver;
 	
-	@JsonManagedReference(value = "Vehicle")
+	@JsonBackReference(value = "Vehicle")
 	@ManyToOne
 	private Vehicle vehicle;
 	

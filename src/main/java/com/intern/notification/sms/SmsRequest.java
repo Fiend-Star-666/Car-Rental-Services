@@ -1,25 +1,35 @@
 package com.intern.notification.sms;
 
+import javax.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 public class SmsRequest {
 	
-	private String number;
+	@NotBlank
+	private String mobileNumber;
+	@NotBlank
 	private String message;
-	public String getNumber() {
-		return number;
+	
+
+	public SmsRequest(@JsonProperty("mobileNumber")String mobileNumber,
+			@JsonProperty("message")String message) {
+		this.mobileNumber = mobileNumber;
+		this.message = message;
 	}
-	public void setNumber(String number) {
-		this.number = number;
+
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
+
 	public String getMessage() {
 		return message;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+
+	@Override
+	public String toString() {
+		return "SmsRequest [mobileNumber=" + mobileNumber + ", message=" + message + "]";
 	}
-	public SmsRequest(String number, String message) {
-		super();
-		this.number = number;
-		this.message = message;
-	}
+
 
 }

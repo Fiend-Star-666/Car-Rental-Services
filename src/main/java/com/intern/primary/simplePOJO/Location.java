@@ -13,8 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Embeddable
-public class Location {
-	
+public class Location {	
 	private String streetAddress;
 	private String city;
 	private String state;
