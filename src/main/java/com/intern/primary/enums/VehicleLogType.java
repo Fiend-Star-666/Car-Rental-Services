@@ -2,7 +2,7 @@ package com.intern.primary.enums;
 
 public enum VehicleLogType {
 	Accident,
-	Fuelling,
+	Refueling,
 	CleaningService,
 	OilChange,
 	Repair,

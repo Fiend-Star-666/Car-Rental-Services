@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.intern.DAO.BillItemRepository;
 import com.intern.DAO.BillRepository;
+import com.intern.DAO.EquipmentRepository;
 import com.intern.DAO.NotificationRepository;
 import com.intern.DAO.PaymentRepository;
+import com.intern.DAO.RentalInsuranceRepository;
+import com.intern.DAO.ServiceRepository;
 import com.intern.DAO.VehicleReservationRepository;
 import com.intern.carRental.primary.Bill;
 import com.intern.carRental.primary.VehicleReservation;
@@ -32,6 +35,15 @@ public class VehicleReservationImpl implements VehicleReservationServices {
 	
 	@Autowired
 	private PaymentRepository paymentRepo;
+	
+	@Autowired
+	private ServiceRepository serviceRepo;
+	
+	@Autowired
+	private EquipmentRepository equipmentRepo;
+	
+	@Autowired
+	private RentalInsuranceRepository rentalInsuranceRepo;
 	
 	@Override
 	public void makeReservation(VehicleReservation vehiclereservation){
@@ -73,7 +85,12 @@ public class VehicleReservationImpl implements VehicleReservationServices {
 		billRepo.deleteById(vehicleReservation.getBill().getId());
 		notificationRepo.deleteAll(vehicleReservation.getNotification());
 		
+		serviceRepo.deleteAll(vehicleReservation.getService());
+		equipmentRepo.deleteAll(vehicleReservation.getEquipment());
+		rentalInsuranceRepo.deleteAll(vehicleReservation.getRentalinsurance());
+		
 		vehicleReservationRepo.deleteById(vehicleReservation.getId());
+
 
 	}
 

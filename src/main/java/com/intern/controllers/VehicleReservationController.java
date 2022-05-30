@@ -1,24 +1,69 @@
 package com.intern.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import org.aspectj.weaver.ast.Instanceof;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.intern.DAO.AccountRepository;
+import com.intern.DAO.AdditionalDriverRepository;
+import com.intern.DAO.BillItemRepository;
+import com.intern.DAO.BillRepository;
 import com.intern.DAO.CarRentalLocationRepository;
+import com.intern.DAO.EquipmentRepository;
+import com.intern.DAO.ParkingStallRepository;
+import com.intern.DAO.RentalInsuranceRepository;
+import com.intern.DAO.ServiceRepository;
 import com.intern.DAO.VehicleRepository;
 import com.intern.DAO.VehicleReservationRepository;
+import com.intern.carRental.primary.AdditionalDriver;
+import com.intern.carRental.primary.Bill;
+import com.intern.carRental.primary.BillItem;
+import com.intern.carRental.primary.CarRentalLocation;
+import com.intern.carRental.primary.Rates;
 import com.intern.carRental.primary.VehicleReservation;
 import com.intern.carRental.primary.abstrct.Account;
+import com.intern.carRental.primary.abstrct.Notification;
 import com.intern.carRental.primary.abstrct.Vehicle;
+import com.intern.carRental.primary.vehicletypes.Car;
+import com.intern.carRental.primary.vehicletypes.Motorcycle;
+import com.intern.carRental.primary.vehicletypes.SUV;
+import com.intern.carRental.primary.vehicletypes.Truck;
+import com.intern.carRental.primary.vehicletypes.Van;
+import com.intern.notification.email.SimpleTryEmail;
+import com.intern.primary.addonServices.BelongingInsurance;
+import com.intern.primary.addonServices.ChildSeat;
+import com.intern.primary.addonServices.Driver;
+import com.intern.primary.addonServices.EmailNotification;
+import com.intern.primary.addonServices.LiabilityInsurance;
+import com.intern.primary.addonServices.Navigation;
+import com.intern.primary.addonServices.PersonalInsurance;
+import com.intern.primary.addonServices.RoadsideAssistance;
+import com.intern.primary.addonServices.SkiRack;
+import com.intern.primary.addonServices.WiFi;
+import com.intern.primary.enums.BillItemType;
+import com.intern.primary.enums.ReservationStatus;
+import com.intern.primary.enums.VehicleStatus;
+import com.intern.services.impl.VehicleReservationImpl;
 
+import freemarker.template.utility.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,6 +72,7 @@ import lombok.ToString;
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "http://localhost:3000")
 public class VehicleReservationController {
+	
 
 	@Autowired
 	AccountRepository accountRepo;
@@ -40,11 +86,442 @@ public class VehicleReservationController {
 	@Autowired
 	VehicleRepository vehicleRepo;
 	
-	@Getter
-	@Setter
-	@ToString
-	class VehicleID{
-		int vehicleId;
+	@Autowired
+	VehicleReservationImpl vehicleReservationImpl;
+	
+	@Autowired
+	BillItemRepository billItemRepo;
+	
+	@Autowired
+	BillRepository billRepo;
+	
+	@Autowired
+	ServiceRepository serviceRepo;
+	
+	@Autowired
+	EquipmentRepository equipmentRepo;
+	
+	@Autowired
+	RentalInsuranceRepository rentalInsuranceRepo;
+	
+	@Autowired
+	AdditionalDriverRepository additionalDriverRepo;
+	
+	@Autowired
+	ParkingStallRepository parkingStallRepo;
+	
+	@PostMapping("/CreateVehicleReservation")
+	public VehicleReservation createVehicleReservation(@RequestBody Map<String, Object> payload) throws ParseException {
+	
+		int sum=0;
+		
+		System.out.println(payload);
+		VehicleReservation vehicleReservation= new VehicleReservation();
+		vehicleReservationRepo.save(vehicleReservation);
+		
+		vehicleReservation.setReservationNumber(Rates.reservationIDs());
+		
+		vehicleReservation.setAccount(accountRepo.getById((int)payload.get("accId")));
+
+		vehicleReservation.setVehicle(vehicleRepo.getById(Integer.parseInt((String)payload.get("vehicleId"))));
+		
+		CarRentalLocation pickup=carRentalLocationRepo.getById((Integer)payload.get("pickupLocation"));
+		vehicleReservation.setPickupLocationName(pickup.getName());
+		
+		CarRentalLocation dropoff=carRentalLocationRepo.getById((Integer)payload.get("pickupLocation"));
+
+		vehicleReservation.setReturnLocationName(dropoff.getName());
+		
+		
+		String crdata=(String)payload.get("creationDate");
+		Date crsdate=new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.parse(crdata.substring(0, 10)).plusDays(1).toString().substring(0,10));
+		
+		String duedata=(String)payload.get("dueDate");
+		Date duesdate=new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.parse(duedata.substring(0, 10)).plusDays(1).toString().substring(0,10));
+		
+		
+		Bill bill=new Bill();
+		bill.setBillitem(new ArrayList<>());
+		billRepo.save(bill);
+		
+		vehicleReservation.setCreationDate(crsdate);
+		vehicleReservation.setDueDate(duesdate);
+		
+		long diffInMillies = Math.abs(duesdate.getTime() - crsdate.getTime());
+	    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		
+		int duration=(int) diff;
+		if(duration<=0)	return null;
+		
+			if(vehicleReservation.getVehicle() instanceof Car) {
+				Car car = (Car) vehicleReservation.getVehicle();
+				BillItem billItem=new BillItem();
+				
+				int amount=Rates.ratesVehicles().get(car.getType().toString())*duration;
+				
+				billItem.setAmount(amount);
+				sum+=amount;
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.BaseCharge.toString());
+				billItemRepo.save(billItem);
+
+			}
+			else if(vehicleReservation.getVehicle() instanceof Van)
+			{
+				Van van = (Van) vehicleReservation.getVehicle();
+				BillItem billItem=new BillItem();
+				int amount=Rates.ratesVehicles().get(van.getType().toString())*duration;
+				billItem.setAmount(amount);
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.BaseCharge.toString());
+				billItemRepo.save(billItem);
+				sum+=amount;
+			}
+			else if(vehicleReservation.getVehicle() instanceof Motorcycle) {
+				Motorcycle motorcycle = (Motorcycle) vehicleReservation.getVehicle();
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesVehicles().get("Motorcycle")*duration);
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.BaseCharge.toString());
+				billItemRepo.save(billItem);
+				sum+=billItem.getAmount();
+			}
+			else if(vehicleReservation.getVehicle() instanceof SUV) {
+				SUV suv = (SUV) vehicleReservation.getVehicle();
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesVehicles().get("SUV")*duration);
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.BaseCharge.toString());
+				billItemRepo.save(billItem);
+				sum+=billItem.getAmount();
+			}
+			else if(vehicleReservation.getVehicle() instanceof Truck) {
+				Truck truck = (Truck) vehicleReservation.getVehicle();
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesVehicles().get("Truck")*duration);
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.BaseCharge.toString());
+				billItemRepo.save(billItem);
+				
+				sum+=billItem.getAmount();
+			}
+			
+		if(Boolean.parseBoolean((String)payload.get("services"))){
+			vehicleReservation.setService(new ArrayList<>());
+			
+			if(Boolean.parseBoolean((String)payload.get("driver"))) {
+				Driver driver = new Driver();
+				driver.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getService().add(driver);
+				driver.setServiceId(Rates.servicesIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("driver")*duration);
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.AdditionalService.toString());
+				
+				billItemRepo.save(billItem);
+				
+				serviceRepo.save(driver);
+			
+				sum+=billItem.getAmount();
+			}
+			
+			if(Boolean.parseBoolean((String)payload.get("roadsideAssistance"))) {
+				RoadsideAssistance roadsideAssistance = new RoadsideAssistance();
+				roadsideAssistance.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getService().add(roadsideAssistance);
+				roadsideAssistance.setServiceId(Rates.servicesIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("roadsideAssistance"));
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+
+				serviceRepo.save(roadsideAssistance);
+
+				sum+=billItem.getAmount();
+			}
+	
+			if(Boolean.parseBoolean((String)payload.get("wifi"))) {
+				WiFi wifi = new WiFi();
+				wifi.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getService().add(wifi);
+				wifi.setServiceId(Rates.servicesIDs());
+				
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("wifi")*duration);
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+
+				serviceRepo.save(wifi);
+
+				sum+=billItem.getAmount();
+			}
+				
+		}
+		else	vehicleReservation.setService(null);
+		
+		if(Boolean.parseBoolean((String)payload.get("equipment"))) {
+			vehicleReservation.setEquipment(new ArrayList<>());
+			
+			if(Boolean.parseBoolean((String)payload.get("navigation"))) {
+				
+				Navigation navigation=new Navigation();
+				navigation.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getEquipment().add(navigation);
+				navigation.setEquipmentId(Rates.equipmentIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("navigation"));
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+				
+				equipmentRepo.save(navigation);
+				
+				sum+=billItem.getAmount();
+			}
+			
+			if(Boolean.parseBoolean((String)payload.get("childSeat"))) {
+				
+				ChildSeat childSeat=new ChildSeat();
+				childSeat.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getEquipment().add(childSeat);
+				childSeat.setEquipmentId(Rates.equipmentIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("childSeat"));
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+				
+				equipmentRepo.save(childSeat);
+
+				sum+=billItem.getAmount();
+			}
+	
+			if(Boolean.parseBoolean((String)payload.get("skiRack"))) {
+				
+				SkiRack skiRack=new SkiRack();
+				skiRack.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getEquipment().add(skiRack);
+				skiRack.setEquipmentId(Rates.equipmentIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("skiRack"));
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+
+				equipmentRepo.save(skiRack);
+
+				sum+=billItem.getAmount();
+			}
+			
+		}
+		else vehicleReservation.setEquipment(null);
+		
+		if(Boolean.parseBoolean((String)payload.get("rentalInsurance"))) {
+			vehicleReservation.setRentalinsurance(new ArrayList<>());
+			
+			if(Boolean.parseBoolean((String)payload.get("personalInsurance"))) {
+				
+				PersonalInsurance personalInsurance=new PersonalInsurance();
+				personalInsurance.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getRentalinsurance().add(personalInsurance);
+				personalInsurance.setInsuranceId(Rates.rentalInsuranceIDs());
+				
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("personalInsurance"));
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+
+				rentalInsuranceRepo.save(personalInsurance);
+
+				sum+=billItem.getAmount();
+			}
+			
+			if(Boolean.parseBoolean((String)payload.get("belongingInsurance"))) {
+				
+				BelongingInsurance belongingInsurance=new BelongingInsurance();
+				belongingInsurance.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getRentalinsurance().add(belongingInsurance);
+				belongingInsurance.setInsuranceId(Rates.rentalInsuranceIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("belongingInsurance"));
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+				
+				rentalInsuranceRepo.save(belongingInsurance);
+
+				sum+=billItem.getAmount();
+			}
+	
+			if(Boolean.parseBoolean((String)payload.get("liabilityInsurance"))) {
+				
+				LiabilityInsurance liabilityInsurance=new LiabilityInsurance();
+				liabilityInsurance.setVehiclereservation(vehicleReservation);
+				vehicleReservation.getRentalinsurance().add(liabilityInsurance);
+				
+				liabilityInsurance.setInsuranceId(Rates.rentalInsuranceIDs());
+				
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesObjects().get("liabilityInsurance"));
+				
+				billItem.setBill(bill);
+				
+				billItem.setService(BillItemType.AdditionalService.toString());
+				billItemRepo.save(billItem);
+				
+				rentalInsuranceRepo.save(liabilityInsurance);
+				
+				sum+=billItem.getAmount();
+			}
+			
+		}
+		
+		else vehicleReservation.setRentalinsurance(null);
+
+		if(Boolean.parseBoolean((String)payload.get("additionalDriver"))) {
+			AdditionalDriver additionalDriver = new AdditionalDriver();
+			
+			
+			additionalDriver.setPerson(null);	//idk
+			
+			additionalDriver.setDriverID(Rates.additionalDriverIDs());
+			
+			additionalDriver.setVehicleReservation(vehicleReservation);
+			vehicleReservation.setAdditionaldriver(new ArrayList<>());
+			vehicleReservation.getAdditionaldriver().add(additionalDriver);
+			
+			BillItem billItem=new BillItem();
+			billItem.setAmount(Rates.ratesObjects().get("additionalDriver"));
+			
+			billItem.setBill(bill);
+			
+			billItem.setService(BillItemType.AdditionalService.toString());
+			billItemRepo.save(billItem);
+			
+			additionalDriverRepo.save(additionalDriver);
+
+			sum+=billItem.getAmount();
+		}
+		else vehicleReservation.setAdditionaldriver(null);
+		
+		vehicleReservation.setBill(bill);	//idk
+	
+
+		bill.setTotalAmount(sum);
+
+		billRepo.save(bill);
+		
+		vehicleReservation.setRSstatus(ReservationStatus.Confirmed);
+		
+		vehicleReservation.setReturnDate(null);	//tbd
+		
+		
+		EmailNotification emailNotif= new EmailNotification();
+		
+		emailNotif.setBill(bill);
+		emailNotif.setContent("Your Reservation with Id: "+ vehicleReservation.getReservationNumber()+" has been created for Vehicle" + vehicleReservation.getVehicle().getMake()+vehicleReservation.getVehicle().getModel()
+								+ " for the dates between "+crdata +" and " + duedata +" with the total billing amount of "+ bill.getTotalAmount());
+		emailNotif.setCreatedOn(duesdate);
+		
+		emailNotif.setPhoneNumber(vehicleReservation.getAccount().getPerson().getPhone());
+		
+		emailNotif.setVehiclereservation(vehicleReservation);
+		
+		vehicleReservation.setNotification(new ArrayList<>());	//idk
+		
+		vehicleReservation.getNotification().add(emailNotif);
+		
+		SimpleTryEmail emailsending = new SimpleTryEmail();
+		
+		emailsending.sending(emailNotif.getEmail(), "Reservation of Vehicle", emailNotif.getContent());
+		
+		vehicleReservationImpl.makeReservation(vehicleReservation);
+		
+		vehicleReservation.getAccount().setVehicle(vehicleReservation.getVehicle());
+		
+		accountRepo.save(vehicleReservation.getAccount());
+		
+		
+		vehicleReservation.getVehicle().setStatus(VehicleStatus.Reserved);
+		
+		vehicleReservation.getVehicle().getVehiclereservation().add(vehicleReservation);
+		
+		if((Integer)vehicleReservation.getVehicle().getParkingstall().getId()!=null) {
+		int parkingStallId=vehicleReservation.getVehicle().getParkingstall().getId();
+		
+		vehicleReservation.getVehicle().setParkingstall(null);
+		
+		parkingStallRepo.deleteById(parkingStallId);
+		}
+		
+		vehicleRepo.save(vehicleReservation.getVehicle());
+		
+		return vehicleReservation;
+		
+	}
+
+	@DeleteMapping("/RemoveReservation/{VRid}")
+	public String removeVehicleReservation(@PathVariable int VRid) throws ParseException {
+	
+		vehicleReservationRepo.getById(VRid).getVehicle().setStatus(VehicleStatus.Available);
+
+		
+		vehicleReservationRepo.getById(VRid).getVehicle().setVehiclereservation(null);	
+		
+		vehicleRepo.save(vehicleReservationRepo.getById(VRid).getVehicle());
+		
+		/*
+		billItemRepo.deleteAll(vehicleReservationRepo.getById(VRid).getBill().getBillitem());
+		
+		billRepo.deleteById(vehicleReservationRepo.getById(VRid).getBill().getId());
+		
+		vehicleReservationRepo.deleteById(VRid);
+		*/
+		
+		SimpleTryEmail emailsending = new SimpleTryEmail();
+		/*
+		emailsending.sending(emailNotif.getEmail(), "Reservation of Vehicle", emailNotif.getContent());
+		*/
+		vehicleReservationRepo.getById(VRid).getAccount().setVehicle(null);
+		vehicleReservationRepo.getById(VRid).getAccount().getVehiclereservation().remove(vehicleReservationRepo.getById(VRid));
+		
+		
+		accountRepo.save(vehicleReservationRepo.getById(VRid).getAccount());
+		
+		/*
+		int parkingStallId=vehicleReservation.getVehicle().getParkingstall().getId();
+		
+		vehicleReservation.getVehicle().setParkingstall(null);
+		
+		parkingStallRepo.deleteById(parkingStallId);
+		
+		
+		vehicleRepo.save(vehicleReservation.getVehicle());
+		*/
+		System.out.println("HEHE");
+		vehicleReservationImpl.cancelReservation(vehicleReservationRepo.getById(VRid).getReservationNumber());
+
+		return "Cancelled";
+		
 	}
 	
 	@GetMapping("/vehiclereservation/account/view/{accId}")
@@ -60,44 +537,64 @@ public class VehicleReservationController {
 		return vehicleReservation;
 	}
 	
+	@CrossOrigin
+	@GetMapping("/account/vehiclereservation/vehicle/{VRid}")
+	public int getVehicleByVRid(@PathVariable int VRid) {
+		Vehicle vehicle=vehicleReservationRepo.getById(VRid).getVehicle();
+		return vehicle.getId();
+	}
+	
+	
 	/*
-	//TODO
-	@GetMapping("/admin/vehiclereservation/carrentallocation/view/{vehicleId}")
-	public List<List<VehicleReservation>> getVehicleReservationPerLocation(@PathVariable int crLocationID){
-			List<Vehicle> vehicles=carRentalLocationRepo.findById(crLocationID).get().getVehicle();
-			//LisList<VehicleReservation> vehicleReservation=new ArrayList<>();
-			for (Vehicle vehicle : vehicles) {
-				//vehicleReservation.add(vehicle.getVehiclereservation());
-			}
-/*
- * vehicleReservation: find all
- * 		Then iterate through the id's of list<vehicle> then form a map of carRentalLocaiton id vs vehicleReservation
- *-/
-		//return vehicleReservation;
+	@GetMapping("/vehiclereservations/Locations/all")
+	public List<String> getVehicleReservationForCRLoaction(){
+			List<String> crLocationNames=new ArrayList<>();
+					for(CarRentalLocation x:carRentalLocationRepo.findAll()) {
+						crLocationNames.add(x.getName());
+						}
+		return crLocationNames;
 	}
 	*/
-}
+	
+	@GetMapping("/vehiclereservations/Locations/all")
+	public List<CarRentalLocation> getVehicleReservationForCRLoaction(){
+			List<CarRentalLocation> crLocations=carRentalLocationRepo.findAll();
+					/*for(CarRentalLocation x:carRentalLocationRepo.findAll()) {
+						crLocationNames.add(x.getName());
+						}*/
+		return crLocations;
+	}
 
-/*
-@GetMapping("/vehiclereservation/account/view/{accId}")
-public Map<String,List<VehicleReservation>> getVehicleReservationPerAccount(@PathVariable int accId) {
+	@GetMapping("/vehiclereservations/Location/{name}/Vehicles")
+	public List<Vehicle> getVehicleViaLocation(String name){
+		List<Vehicle> vehicles=carRentalLocationRepo.findByName(name).getVehicle();
+		return vehicles;
+	}
 	
-	List<VehicleReservation> vehicleReservation=accountRepo.findById(accId).get().getVehiclereservation();	
-	Map<String,List<VehicleReservation>> list=new HashMap<>();
-	//for (VehicleReservation vehicleR : vehicleReservation) {
-		VehicleID carid=new VehicleID();
+	@CrossOrigin
+	@PostMapping("/account/vehiclereservation/vehicle/pickup/{VRid}")
+	public String pickupVehicleByVRId(@PathVariable int VRid) {
+		VehicleReservation vehicleReservation = vehicleReservationRepo.findById(VRid).get();
+		
+		return "hehe";
+	}
+	
+	/*
+	 List<CarRentalLocation> crls=carRentalLocationRepo.findAll();
+		
+		int crlid;
+		String returnlction=vehicleReservationRepo.getById(VRid).getReturnLocationName();
+		
+	 int crlid;
+		String returnlction=vehicleReservationRepo.getById(VRid).getReturnLocationName();
 		/*
-	for (VehicleReservation vehicleRes2 : vehicleReservation) {
-		System.out.println(vehicleRes2);
-	}*-/
-	
-		int vehicleID=accountRepo.findById(accId).get().getVehicle().getId();
-		carid.setVehicleId(accountRepo.findById(accId).get().getVehicle().getId());
-		System.out.println(carid.toString());
-		list.put(carid.toString(),vehicleReservation);
-	//}
-	//list.put(listVehicleId,vehicleReservation);
-	return list;
+		for (CarRentalLocation carRentalLocation : crls) {
+			if(carRentalLocation.getName().equals(returnlction)) {
+				crlid=carRentalLocation.getId();
+				break;
+			}
+		} 
+	 
+	 */
 	
 }
-*/

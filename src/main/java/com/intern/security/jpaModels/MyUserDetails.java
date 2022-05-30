@@ -5,9 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.intern.carRental.primary.abstrct.Account;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Setter
 @Getter
 public class MyUserDetails implements UserDetails {
@@ -23,17 +22,18 @@ public class MyUserDetails implements UserDetails {
 	private PasswordEncoder passwordEncoder;
 	
     private String emailId;
+    private String type="Bearer";
     private String password;
-    private boolean active;
+    private boolean active=true;
     private List<GrantedAuthority> authorities;
-    
+    private int accId;
 
     
     
     public MyUserDetails(Account user) {
         this.emailId = user.getPerson().getEmail();
         this.password=user.getPassword();
-        //this.password = passwordEncoder.encode(user.getPassword());
+        this.accId=user.getId();
         this.active = user.isAccActive();
         this.authorities = Arrays.stream(user.getSecurityRoles().split(","))
                     .map(SimpleGrantedAuthority::new)
@@ -49,7 +49,7 @@ public class MyUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
        // return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
+    	System.out.println(authorities.toString());
     	return authorities;
     }
 
@@ -71,7 +71,9 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-    	return active;
+    	System.out.println("enable hehe");
+    	 return true;
+    	//return active;
     }
 
 

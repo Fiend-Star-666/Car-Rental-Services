@@ -14,6 +14,7 @@ import com.intern.DAO.BillItemRepository;
 import com.intern.DAO.BillRepository;
 import com.intern.DAO.VehicleReservationRepository;
 import com.intern.carRental.primary.Bill;
+import com.intern.carRental.primary.BillItem;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -38,6 +39,13 @@ public class BillController {
 		obj.add(bill);
 		
 		return obj;
+	}
+	
+	@GetMapping("/vehiclereservation/viewbillItem/{vrId}/detailedview/")
+	public List<BillItem> getAllBillItemsViaVRId(@PathVariable int vrId){
+		List <BillItem> bitem = vehicleReservationRepo.getById(vrId).getBill().getBillitem();
+		
+		return bitem;
 	}
 
 }

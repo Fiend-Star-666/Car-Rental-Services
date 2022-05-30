@@ -41,7 +41,7 @@ public class VehicleReservation{
 	private int id;
 	private String reservationNumber;
 	private Date creationDate;
-	
+	//reservationNumber
 	@Enumerated(EnumType.STRING)
 	private ReservationStatus RSstatus;
 	
@@ -94,4 +94,10 @@ public class VehicleReservation{
 				+ rentalinsurance + ", equipment=" + equipment + "]";
 	}
 	*/
+	
+	//Rates
+		
+	
+	
+	
 }

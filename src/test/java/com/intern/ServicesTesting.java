@@ -37,6 +37,7 @@ import com.intern.carRental.primary.Member;
 import com.intern.carRental.primary.ParkingStall;
 import com.intern.carRental.primary.VehicleLog;
 import com.intern.carRental.primary.VehicleReservation;
+import com.intern.carRental.primary.abstrct.Account;
 import com.intern.carRental.primary.abstrct.Vehicle;
 import com.intern.carRental.primary.vehicletypes.Car;
 import com.intern.primary.addonServices.CheckTransaction;
@@ -122,15 +123,27 @@ public class ServicesTesting {
 	@Autowired
 	private VehicleLogRepository vehicleLogRepo;
 	
+	//24may2022
+	@Test
+	void removeacc() {
+		//accountRepo.delete(accountRepo.getById(4));
+		Account account=accountRepo.getById(5);
+		account.setId(4);
+		accountRepo.save(account);
+	}
+	
 	@Test
  	void carRentalSystem() {
 		// CarRentalSystem test
 		carrentalsystem1 = new CarRentalSystem();
-		carrentalsystem1.setCarRentalLocation(null);
-		carrentalsystem1.setName("mohit");
+		carrentalsystem1.setCarRentalLocation(new ArrayList<>());
+		carrentalsystem1.setName("BOOM CARS");
 		carRentalSystemRepo.save(carrentalsystem1);
 		
 	}
+	
+	
+	
 	
 	@Test
 	void carRentalLocation() {
@@ -1085,4 +1098,6 @@ public class ServicesTesting {
 		
 		
 	}*/
+	
+
 }

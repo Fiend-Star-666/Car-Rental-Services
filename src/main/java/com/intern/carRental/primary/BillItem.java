@@ -24,6 +24,7 @@ public class BillItem {
 	
 	private String service;
 	
+	
 	@JsonBackReference(value = "billItem")
 	@ManyToOne(optional = false)
 	private Bill bill;

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.intern.DAO.AccountRepository;
 import com.intern.carRental.primary.abstrct.Account;
+import com.intern.primary.enums.AccountStatus;
 import com.intern.security.jpaModels.MyUserDetails;
 
 
@@ -20,9 +21,13 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String emailId) {
         Account user = accountRepo.findByPersonEmail(emailId);
+//        Account user = accountRepo.findByPersonEmail("admin007@gmail.com");
 
-        if(user.equals(null));{
-        	new UsernameNotFoundException("Not found: " + emailId);
+        System.out.println("loadbyusername in myuserdetailsService user: "+user);
+
+        if(user==null){
+
+        	new UsernameNotFoundException("Not found hehe1: " + emailId);
         }
         
 		MyUserDetails userDetails=new MyUserDetails(user);
