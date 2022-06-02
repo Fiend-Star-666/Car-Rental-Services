@@ -36,6 +36,7 @@ public class Rates {
 			ratesVehicles.put("Motorcycle", 800);
 			
 			ratesVehicles.put("Truck", 4000);
+					
 			
 		
 		return ratesVehicles;

@@ -90,9 +90,8 @@ public class VehicleReservationImpl implements VehicleReservationServices {
 		rentalInsuranceRepo.deleteAll(vehicleReservation.getRentalinsurance());
 		
 		vehicleReservationRepo.deleteById(vehicleReservation.getId());
-
-
 	}
+	
 
 	
 }

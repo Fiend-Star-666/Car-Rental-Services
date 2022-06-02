@@ -30,6 +30,7 @@ import com.intern.notification.email.SimpleTryEmail;
 import com.intern.primary.enums.AccountStatus;
 import com.intern.primary.simplePOJO.Location;
 import com.intern.primary.simplePOJO.Person;
+import com.intern.services.impl.AccountServiceImpl;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -40,6 +41,9 @@ public class AccountController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AccountServiceImpl accountService;
 	
 	@CrossOrigin
 	@PostMapping("/account/register/admin")
@@ -160,6 +164,20 @@ public class AccountController {
 			list.add(account);
 		return list;
 		*/
+		return null;
+	}
+	
+	@PostMapping("/forgotPassword")
+	public Account forgotPassword(@RequestBody Map<String, Object> payload) throws Exception{
+		Account account = accountRepo.findByPersonEmail((String)payload.get("email"));
+		if (account instanceof Member) {
+			Member member = (Member) account;
+			if(member.getDriverLicenseNumber().equals((String)payload.get("driverLicense"))){
+				member.setPassword(passwordEncoder.encode((String)payload.get("password")));
+				accountService.updateAccount(member);
+				return member;
+			}
+		}
 		return null;
 	}
 	

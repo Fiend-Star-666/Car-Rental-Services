@@ -1265,7 +1265,10 @@ public class ComplexTesting {
 	void pickingupVehicle() throws Exception{
 
 //___________________________________________________________________________________________________
-			
+			//real: vehicleReservation id
+	//		 se vehicle chakki then usse account nikala, fir vehicle status update kra loaned pe and reservation krdi completed and notification
+		
+		
 			/*
 			if(payment1.getStatus().equals(PaymentStatus.Completed)){
 				vehiclereservation1.setRSstatus(ReservationStatus.Confirmed);
@@ -1278,7 +1281,7 @@ public class ComplexTesting {
 				 Barcode Reader Scans barcode of the Vehicle
 				 
 				 Customer is searched via their licence number
-				 
+		 
 				 check if the customer has a valid reservation for the vehicle?
 				 	if Yes:
 				 		Update Status of vehicle to "Loaned"
