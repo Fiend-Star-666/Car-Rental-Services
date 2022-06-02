@@ -10,7 +10,9 @@ import javax.mail.internet.MimeMessage;
 public class SimpleTryEmail {
 
 		public boolean sending(String recepient, String subject, String body) {//to, subject:(it can be done via enum), message
-			
+			System.out.println(recepient);
+			System.out.println(subject);
+			System.out.println(body);
 			String from = "travelxperience426@gmail.com";						
 			String to = recepient; 				
 			

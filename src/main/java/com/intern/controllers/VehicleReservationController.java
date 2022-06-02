@@ -30,6 +30,7 @@ import com.intern.DAO.BillItemRepository;
 import com.intern.DAO.BillRepository;
 import com.intern.DAO.CarRentalLocationRepository;
 import com.intern.DAO.EquipmentRepository;
+import com.intern.DAO.NotificationRepository;
 import com.intern.DAO.ParkingStallRepository;
 import com.intern.DAO.RentalInsuranceRepository;
 import com.intern.DAO.ServiceRepository;
@@ -121,6 +122,10 @@ public class VehicleReservationController {
 	
 	@Autowired
 	ParkingStallRepository parkingStallRepo;
+	
+	@Autowired
+	NotificationRepository notificationRepo;
+	
 	
 	@PostMapping("/CreateVehicleReservation")
 	public VehicleReservation createVehicleReservation(@RequestBody Map<String, Object> payload) throws ParseException {
@@ -590,10 +595,10 @@ public class VehicleReservationController {
 	}
 	
 	@CrossOrigin
-	@PostMapping("/account/vehiclereservation/vehicle/pickup/{VRid}")
+	@GetMapping("/account/vehiclereservation/vehicle/pickup/{VRid}")
 	public String pickupVehicleByVRId(@PathVariable int VRid) {
 		VehicleReservation vehicleReservation = vehicleReservationRepo.findById(VRid).get();
-
+		System.out.println("Hehe");
 		//real: vehicleReservation id
 		//		 se vehicle chakki then usse account nikala, fir vehicle status update kra loaned pe and reservation krdi completed and notification
 		vehicleReservation.getVehicle().setStatus(VehicleStatus.Loaned);
@@ -608,9 +613,9 @@ public class VehicleReservationController {
 			
 			emailNotif.setBill(vehicleReservation.getBill());
 			
-			emailNotif.setContent("Your have Picked your Vehicle with the Reservation Id: "+ vehicleReservation.getReservationNumber()+" has been created for Vehicle" + vehicleReservation.getVehicle().getMake()+vehicleReservation.getVehicle().getModel());
+			emailNotif.setContent("Hi "+vehicleReservation.getAccount().getPerson().getName()+",\nYou have Picked your Vehicle: "+ vehicleReservation.getVehicle().getMake()+" "+vehicleReservation.getVehicle().getModel() +" with the Reservation Id: "+ vehicleReservation.getReservationNumber()+"\nThanks and Regards\n"+vehicleReservation.getVehicle().getCarRentalLocation().getName());
 			emailNotif.setCreatedOn(new Date());
-			
+			emailNotif.setEmail(vehicleReservation.getAccount().getPerson().getEmail());
 			emailNotif.setPhoneNumber(vehicleReservation.getAccount().getPerson().getPhone());
 				
 			emailNotif.setVehiclereservation(vehicleReservation);
@@ -622,6 +627,9 @@ public class VehicleReservationController {
 			SimpleTryEmail emailsending = new SimpleTryEmail();
 			
 			emailsending.sending(emailNotif.getEmail(), "Vehicle Picked up Sucessfully", emailNotif.getContent());
+			
+			
+			notificationRepo.save(emailNotif);
 			
 		return "Picked Up Vehicle";
 	}
