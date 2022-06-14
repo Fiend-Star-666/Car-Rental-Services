@@ -49,7 +49,6 @@ public class MyUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
        // return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-    	System.out.println(authorities.toString());
     	return authorities;
     }
 
@@ -71,7 +70,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-    	System.out.println("enable hehe");
     	 return true;
     	//return active;
     }

@@ -56,7 +56,7 @@ public class VehicleController {
 	public Vehicle addVehicleNow(@RequestBody Map<String, Object> payload)throws ParseException 
 	{	Vehicle vehicle = null;
 		String vtype=(String)payload.get("vtype");
-		System.out.println(payload);
+
 		if(vtype.contentEquals("Car")){
 			vehicle = new Car();
 		}

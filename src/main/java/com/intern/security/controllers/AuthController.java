@@ -49,29 +49,22 @@ public class AuthController {
 	  @CrossOrigin
 	  @PostMapping("/signin")
 	  public ResponseEntity<?> authenticateUser( @RequestBody Map<String,String> Payload ) {
-		  System.out.println(Payload);
 		  String emailId=(String)Payload.get("email");
 		  
 		  String password=(String)Payload.get("password");
 		  
 	        //UserDetails userDetails = userDetailsService.loadUserByUsername(emailId);
-	        System.out.println("hehe11");
 	    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(emailId,password));
-		  System.out.println("hehe2");
 
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
-		  System.out.println("hehe3");
 
 	    String jwt = jwtUtils.generateJwtToken(authentication);
-	    System.out.println("hehe4");
 	    
 	    MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();    
-		  System.out.println("hehe5");
 
 	    List<String> roles = userDetails.getAuthorities().stream()
 	        .map(item -> item.getAuthority())
 	        .collect(Collectors.toList());
-		  System.out.println("hehe6");
 
 	    return ResponseEntity.ok(new JwtResponse(jwt,
 	                         userDetails.getType(),

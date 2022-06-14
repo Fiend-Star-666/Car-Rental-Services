@@ -1,4 +1,4 @@
-      package com.intern.carRental.primary.abstrct;
+package com.intern.carRental.primary.abstrct;
 
 import java.util.List;
 
@@ -37,6 +37,7 @@ public abstract class Account implements Search{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)  
 	private int id;
+	
 	private String password;
 	private Boolean accActive;
     

@@ -133,19 +133,26 @@ public class VehicleReservationController {
 		int sum=0;
 		
 		System.out.println(payload);
+		
 		VehicleReservation vehicleReservation= new VehicleReservation();
 		vehicleReservationRepo.save(vehicleReservation);
 		
 		vehicleReservation.setReservationNumber(Rates.reservationIDs());
 		
 		vehicleReservation.setAccount(accountRepo.getById((int)payload.get("accId")));
-
-		vehicleReservation.setVehicle(vehicleRepo.getById(Integer.parseInt((String)payload.get("vehicleId"))));
+		
+		String data = (String)payload.get("vehicleId");
+		
+		String vehicleID=data.substring(0, 1);
+		String vehicletype = data.substring(1);
+	
+		
+		vehicleReservation.setVehicle(vehicleRepo.getById(Integer.parseInt(vehicleID)));
 		
 		CarRentalLocation pickup=carRentalLocationRepo.getById((Integer)payload.get("pickupLocation"));
 		vehicleReservation.setPickupLocationName(pickup.getName());
 		
-		CarRentalLocation dropoff=carRentalLocationRepo.getById((Integer)payload.get("pickupLocation"));
+		CarRentalLocation dropoff=carRentalLocationRepo.getById((Integer)payload.get("returnLocation"));
 
 		vehicleReservation.setReturnLocationName(dropoff.getName());
 		
@@ -167,14 +174,15 @@ public class VehicleReservationController {
 		long diffInMillies = Math.abs(duesdate.getTime() - crsdate.getTime());
 	    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 		
+	    
+	    
 		int duration=(int) diff;
 		if(duration<=0)	return null;
-		
-			if(vehicleReservation.getVehicle() instanceof Car) {
-				Car car = (Car) vehicleReservation.getVehicle();
+			if(vehicleRepo.getById(Integer.parseInt(vehicleID)).getPassengerCapacity()==5) {
+
 				BillItem billItem=new BillItem();
+				int amount=Rates.ratesVehicles().get(vehicletype)*duration;
 				
-				int amount=Rates.ratesVehicles().get(car.getType().toString())*duration;
 				
 				billItem.setAmount(amount);
 				sum+=amount;
@@ -183,28 +191,27 @@ public class VehicleReservationController {
 				billItemRepo.save(billItem);
 
 			}
-			else if(vehicleReservation.getVehicle() instanceof Van)
+			else if(vehicleRepo.getById(Integer.parseInt(vehicleID)).getPassengerCapacity()==5&&vehicleRepo.getById(Integer.parseInt(vehicleID)).getModel().equalsIgnoreCase("omni"))
 			{
-				Van van = (Van) vehicleReservation.getVehicle();
 				BillItem billItem=new BillItem();
-				int amount=Rates.ratesVehicles().get(van.getType().toString())*duration;
+				int amount=Rates.ratesVehicles().get(vehicletype.toString())*duration;
+
 				billItem.setAmount(amount);
-				billItem.setBill(bill);
-				billItem.setService(BillItemType.BaseCharge.toString());
-				billItemRepo.save(billItem);
-				sum+=amount;
-			}
-			else if(vehicleReservation.getVehicle() instanceof Motorcycle) {
-				Motorcycle motorcycle = (Motorcycle) vehicleReservation.getVehicle();
-				BillItem billItem=new BillItem();
-				billItem.setAmount(Rates.ratesVehicles().get("Motorcycle")*duration);
 				billItem.setBill(bill);
 				billItem.setService(BillItemType.BaseCharge.toString());
 				billItemRepo.save(billItem);
 				sum+=billItem.getAmount();
 			}
-			else if(vehicleReservation.getVehicle() instanceof SUV) {
-				SUV suv = (SUV) vehicleReservation.getVehicle();
+			else if(vehicleRepo.getById(Integer.parseInt(vehicleID)).getPassengerCapacity()==2) {
+				BillItem billItem=new BillItem();
+				billItem.setAmount(Rates.ratesVehicles().get("Motorcycle")*duration);
+				
+				billItem.setBill(bill);
+				billItem.setService(BillItemType.BaseCharge.toString());
+				billItemRepo.save(billItem);
+				sum+=billItem.getAmount();
+			}
+			else if(vehicleRepo.getById(Integer.parseInt(vehicleID)).getPassengerCapacity()==7) {
 				BillItem billItem=new BillItem();
 				billItem.setAmount(Rates.ratesVehicles().get("SUV")*duration);
 				billItem.setBill(bill);
@@ -212,8 +219,7 @@ public class VehicleReservationController {
 				billItemRepo.save(billItem);
 				sum+=billItem.getAmount();
 			}
-			else if(vehicleReservation.getVehicle() instanceof Truck) {
-				Truck truck = (Truck) vehicleReservation.getVehicle();
+			else if(vehicleRepo.getById(Integer.parseInt(vehicleID)).getPassengerCapacity()==3) {
 				BillItem billItem=new BillItem();
 				billItem.setAmount(Rates.ratesVehicles().get("Truck")*duration);
 				billItem.setBill(bill);
@@ -489,7 +495,7 @@ public class VehicleReservationController {
 		
 		vehicleReservation.getVehicle().getVehiclereservation().add(vehicleReservation);
 		
-		if((Integer)vehicleReservation.getVehicle().getParkingstall().getId()!=null) {
+		if(vehicleReservation.getVehicle().getParkingstall()!=null) {
 		int parkingStallId=vehicleReservation.getVehicle().getParkingstall().getId();
 		
 		vehicleReservation.getVehicle().setParkingstall(null);
@@ -540,7 +546,6 @@ public class VehicleReservationController {
 		
 		vehicleRepo.save(vehicleReservation.getVehicle());
 		*/
-		System.out.println("HEHE");
 		vehicleReservationImpl.cancelReservation(vehicleReservationRepo.getById(VRid).getReservationNumber());
 
 		return "Cancelled";
@@ -598,7 +603,9 @@ public class VehicleReservationController {
 	@GetMapping("/account/vehiclereservation/vehicle/pickup/{VRid}")
 	public String pickupVehicleByVRId(@PathVariable int VRid) {
 		VehicleReservation vehicleReservation = vehicleReservationRepo.findById(VRid).get();
-		System.out.println("Hehe");
+		
+		if(vehicleReservation.getVehicle().getStatus().toString().equalsIgnoreCase("Reserved")) {
+		
 		//real: vehicleReservation id
 		//		 se vehicle chakki then usse account nikala, fir vehicle status update kra loaned pe and reservation krdi completed and notification
 		vehicleReservation.getVehicle().setStatus(VehicleStatus.Loaned);
@@ -632,141 +639,174 @@ public class VehicleReservationController {
 			notificationRepo.save(emailNotif);
 			
 		return "Picked Up Vehicle";
+		}
+		return "Error: Either Vehicle is Already picked up or VehicleReservation is already Complete";
 	}
 	
-	/*
+	
 	@CrossOrigin
-	@PostMapping("/account/vehiclereservation/vehicle/return/{VRid}")
+	@GetMapping("/account/vehiclereservation/vehicle/return/{VRid}")
 	public String returnVehicleByVRId(@PathVariable int VRid) {
 		VehicleReservation vehicleReservation = vehicleReservationRepo.findById(VRid).get();
+			Double billSum=vehicleReservation.getBill().getTotalAmount();
+		if(vehicleReservation.getVehicle().getStatus().toString().equalsIgnoreCase("Loaned")) {
+	
+			Date returnDate=new Date();
+			long diffrInMillies = Math.abs(returnDate.getTime() - vehicleReservation.getCreationDate().getTime());
+		    long diffr = TimeUnit.DAYS.convert(diffrInMillies, TimeUnit.MILLISECONDS);
+			
+		    long diffnInMillies = Math.abs(vehicleReservation.getDueDate().getTime() - vehicleReservation.getCreationDate().getTime());
+		    long diffn = TimeUnit.DAYS.convert(diffnInMillies, TimeUnit.MILLISECONDS);
+			
+			int Nduration=(int) diffn;
+		    
+			int Rduration=(int) diffr;
+			
+			vehicleReservation.setReturnDate(returnDate);
 		
-		Date returnDate=new Date();
-		long diffrInMillies = Math.abs(returnDate.getTime() - vehicleReservation.getCreationDate().getTime());
-	    long diffr = TimeUnit.DAYS.convert(diffrInMillies, TimeUnit.MILLISECONDS);
-		
-	    long diffnInMillies = Math.abs(vehicleReservation.getDueDate().getTime() - vehicleReservation.getCreationDate().getTime());
-	    long diffn = TimeUnit.DAYS.convert(diffnInMillies, TimeUnit.MILLISECONDS);
-		
-		int Nduration=(int) diffn;
-	    
-		int Rduration=(int) diffr;
-		
-		vehicleReservation.setReturnDate(returnDate);
-		
-		List<BillItem> billItemLogs = new ArrayList<>();
-		billItemLogs.addAll(vehicleReservation.getBill().getBillitem());
-		
-		long baseCharge=1;
-		
-		for (BillItem billItem : billItemLogs) {
-			if(billItem.getService().equals("BaseCharge")) {
-				baseCharge=billItem.getAmount()/diffn;
-				break;
+			int baseCharge = 1;
+			
+			List<BillItem> billItemLogs = new ArrayList<>();
+			billItemLogs.addAll(vehicleReservation.getBill().getBillitem());
+			
+			long Charge=1;
+			
+			for (BillItem billItem : billItemLogs) {
+				if(billItem.getService().equals("BaseCharge")) {
+					baseCharge=(int) (billItem.getAmount()/diffn);
+					break;
+				}
 			}
-		}
-		
-		if(diffr>0) {
-			BillItem billItem = new BillItem();
 			
-			int sum=0;
-			sum+=Rduration*baseCharge;
-			sum+=500*Rduration;
-			
-			billItem.setAmount(sum);
-			billItem.setBill(vehicleReservation.getBill());
-			billItem.setService(BillItemType.Fine.toString());
-			
-			
-			vehicleReservation.getBill().getBillitem().add(billItem);
-			
-			billItemRepo.save(billItem);
-
-		}
-		
-		List<VehicleLog> logs = new ArrayList<>();
-		logs.addAll(vehicleReservation.getVehicle().getVehicle_log());
-		
-		Boolean accidentFlag=false;
-		
-		for (VehicleLog vehicleLog : logs) {
-			if(vehicleLog.getType().equals(VehicleLogType.Accident)) {
-				accidentFlag=true;
-				break;
-			}
-		}
-		
-		if(accidentFlag) {
-			BillItem billItem = new BillItem();
-			int fine=(int) (baseCharge*10);
-			
-			billItem.setAmount(fine);
-			billItem.setBill(vehicleReservation.getBill());
-			billItem.setService(BillItemType.Fine.toString());
-			
-			vehicleReservation.getBill().getBillitem().add(billItem);
-			
-			billItemRepo.save(billItem);
-			
-		}
-		double fuelChance=Math.random();
-		
-		if(fuelChance<0.5) {
-		/*
-		 	Check if the Fuel-Tank is full?
-		 		if yes:
-		 			Go to next step
-		 		
-		 		if No:
-		 			Calculate fine
-		 			
-		 			add Fine to the Bill
-		 			
-		 			Go to next step
-		 */
-		/*
-			BillItem billItem = new BillItem();
-			int fuelCharge=(int) (2500);
-			
-			billItem.setAmount(fuelCharge);
-			billItem.setBill(vehicleReservation.getBill());
-			billItem.setService(BillItemType.Other.toString());
-			
-			vehicleReservation.getBill().getBillitem().add(billItem);
-			
-			billItemRepo.save(billItem);
-			
-		}
-		 /*			
-		 	Perform Billing Transaction	
-		 	
-		 	Create Vehicle return Transaction
-		 	
-		 	Update Vehicle Status
-		 	
-		 	Send a Vehicle return Notification
-		 */
-	/*
-			EmailNotification emailNotif = new EmailNotification();
-			
-			emailNotif.setBill(vehicleReservation.getBill());
-			
-			emailNotif.setContent("Your have Picked your Vehicle with the Reservation Id: "+ vehicleReservation.getReservationNumber()+" has been created for Vehicle" + vehicleReservation.getVehicle().getMake()+vehicleReservation.getVehicle().getModel());
-			emailNotif.setCreatedOn(new Date());
-			
-			emailNotif.setPhoneNumber(vehicleReservation.getAccount().getPerson().getPhone());
+			if(diffr>0) {
+				BillItem billItem = new BillItem();
 				
-			emailNotif.setVehiclereservation(vehicleReservation);
+				int sum=0;
+				sum+=Rduration*baseCharge;
+				sum+=500*Rduration;
+				
+				billItem.setAmount(sum);
+				billItem.setBill(vehicleReservation.getBill());
+				billItem.setService(BillItemType.Fine.toString());
+				
+				
+				vehicleReservation.getBill().getBillitem().add(billItem);
+				
+				billSum+=billItem.getAmount();
+				vehicleReservation.getBill().setTotalAmount(billSum);
+				
+				billRepo.save(vehicleReservation.getBill());
+				billItemRepo.save(billItem);
+	
+			}
 			
-			vehicleReservation.setNotification(new ArrayList<>());	//idk
+			List<VehicleLog> logs = new ArrayList<>();
+			logs.addAll(vehicleReservation.getVehicle().getVehicle_log());
 			
-			vehicleReservation.getNotification().add(emailNotif);
+			Boolean accidentFlag=false;
 			
-			SimpleTryEmail emailsending = new SimpleTryEmail();
+			for (VehicleLog vehicleLog : logs) {
+				if(vehicleLog.getType().equals(VehicleLogType.Accident)) {
+					accidentFlag=true;
+					break;
+				}
+			}
 			
-			emailsending.sending(emailNotif.getEmail(), "Vehicle Picked up Sucessfully", emailNotif.getContent());
+			if(accidentFlag) {
+				BillItem billItem = new BillItem();
+				int fine=(int) (baseCharge*10);
+				
+				billItem.setAmount(fine);
+				billItem.setBill(vehicleReservation.getBill());
+				billItem.setService(BillItemType.Fine.toString());
+				
+				vehicleReservation.getBill().getBillitem().add(billItem);
+
+
+				billSum+=billItem.getAmount();
+				vehicleReservation.getBill().setTotalAmount(billSum);
+				
+				billRepo.save(vehicleReservation.getBill());
+				billItemRepo.save(billItem);
+				
+			}
+			double fuelChance=Math.random();
+		
+			if(fuelChance<0.5) {
+			/*
+			 	Check if the Fuel-Tank is full?
+			 		if yes:
+			 			Go to next step
+			 		
+			 		if No:
+			 			Calculate fine
+			 			
+			 			add Fine to the Bill
+			 			
+			 			Go to next step
+			 */
+				BillItem billItem = new BillItem();
+				int fuelCharge=(int) (2500);
+				
+				billItem.setAmount(fuelCharge);
+				billItem.setBill(vehicleReservation.getBill());
+				billItem.setService(BillItemType.Other.toString());
+				
+				vehicleReservation.getBill().getBillitem().add(billItem);
+				
+
+				billSum+=billItem.getAmount();
+				vehicleReservation.getBill().setTotalAmount(billSum);
+				
+				billRepo.save(vehicleReservation.getBill());
+				
+				billItemRepo.save(billItem);
+				
+			}
+	
 			
 			
-		return "Returned Vehicle";
+			
+			
+			 /*			
+			 	Perform Billing Transaction	
+			 	
+			 	
+			 */
+			
+				vehicleReservation.getVehicle().setStatus(VehicleStatus.Available);
+				
+				for (CarRentalLocation location : carRentalLocationRepo.findAll()) {
+					if(location.getName().equalsIgnoreCase(vehicleReservation.getReturnLocationName())) {
+						vehicleReservation.getVehicle().setCarRentalLocation(location);
+						break;
+					}
+				}
+				
+				vehicleRepo.save(vehicleReservation.getVehicle());
+				EmailNotification emailNotif = new EmailNotification();
+				
+				emailNotif.setBill(vehicleReservation.getBill());
+				
+				emailNotif.setContent("Your have Returned your Vehicle with the Id: "+ vehicleReservation.getReservationNumber()+", for Vehicle" + vehicleReservation.getVehicle().getMake()+vehicleReservation.getVehicle().getModel());
+				emailNotif.setCreatedOn(new Date());
+				
+				emailNotif.setPhoneNumber(vehicleReservation.getAccount().getPerson().getPhone());
+					
+				emailNotif.setVehiclereservation(vehicleReservation);
+				
+				vehicleReservation.setNotification(new ArrayList<>());	//idk
+				
+				vehicleReservation.getNotification().add(emailNotif);
+				
+				SimpleTryEmail emailsending = new SimpleTryEmail();
+				
+				emailsending.sending(emailNotif.getEmail(), "Vehicle Returned up Sucessfully", emailNotif.getContent());
+				
+				
+				return "Returned Vehicle";
+			}
+		return "Error: Either Vehicle has not been picked up yet or Vehicle has already been returned";
 	}
 	/*	
 	  	Member ne gaadi thok di, receptionist ko call kra and then receptionist ne

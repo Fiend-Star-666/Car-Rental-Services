@@ -62,7 +62,7 @@ public class AccountController {
     	address.setZipcode((String)payload.get("zipcode"));
     	address.setState((String)payload.get("state"));
     	address.setCountry((String)payload.get("country"));
-      
+       
 		Person person = new Person();
     	person.setAddress(address);
     	person.setEmail((String)payload.get("email"));
@@ -99,6 +99,10 @@ public class AccountController {
     public Account registerAccountMember(@RequestBody Map<String, Object> payload) throws ParseException
     {	
 		//System.out.println(payload);
+		
+		if(accountRepo.findByPersonEmail((String)payload.get("email"))!=null){
+			return null;
+		}
 		
 		Location address= new Location();
     

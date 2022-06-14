@@ -61,7 +61,7 @@ public class VehicleReservationImpl implements VehicleReservationServices {
 		oldReservation.setAdditionaldriver(updatedVehicleReservation.getAdditionaldriver());
 		oldReservation.setBill(updatedVehicleReservation.getBill());
 		oldReservation.setCreationDate(updatedVehicleReservation.getCreationDate());
-		oldReservation.setDueDate(updatedVehicleReservation.getCreationDate());//Access to be decided
+		oldReservation.setDueDate(updatedVehicleReservation.getDueDate());//Access to be decided
 		oldReservation.setEquipment(updatedVehicleReservation.getEquipment());
 		oldReservation.setNotification(updatedVehicleReservation.getNotification());
 		oldReservation.setPickupLocationName(updatedVehicleReservation.getPickupLocationName());

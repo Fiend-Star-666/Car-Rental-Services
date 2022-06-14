@@ -662,7 +662,6 @@ public class ServicesTesting {
 		List<Car> trialVehicle = carRepo.findByType(CarType.Economy);
 		//System.out.println(trialVehicle.toString());
 		
-		System.out.println("hehe1");
 		/*
 		for(Car var:trialVehicle) {
 			System.out.println(var.toString());
@@ -670,7 +669,6 @@ public class ServicesTesting {
 		System.out.println("____________________________________________________");
 		ArrayList<Vehicle> arr= vehicleServiceImpl.searchByModel("vista");
 		
-		System.out.println("hehe2");
 		for(Vehicle var:arr) {
 			//var.get
 			//System.out.println(var.toString());

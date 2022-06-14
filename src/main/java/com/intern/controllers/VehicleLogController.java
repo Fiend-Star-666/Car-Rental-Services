@@ -47,7 +47,6 @@ public class VehicleLogController {
 	@PostMapping("/vehicle/createvehiclelog")
 	public VehicleLog createVehicleLogByVehicleId(@RequestBody Map<String, Object> payload) throws ParseException {
 		
-		System.out.println(payload);
 		
 		VehicleLog vehicleLog = new VehicleLog();
 		vehicleLog.setDescription((String)payload.get("description"));
@@ -105,7 +104,6 @@ public class VehicleLogController {
 	public VehicleLog updateVehicleLogByVehicleId(@RequestBody Map<String, Object> payload) throws ParseException 
 	{
 		
-		System.out.println(payload);
 		VehicleLog updateVehicleLog = vehicleLogRepo.findById(Integer.parseInt((String)payload.get("vehicleLogId"))).get();
 		updateVehicleLog.setDescription((String)payload.get("description"));
 		//updateVehicleLog.setType((String)payload.get("type"));

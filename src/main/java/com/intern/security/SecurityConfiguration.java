@@ -30,7 +30,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-    	System.out.println("authorisation auth token filter");
       return new AuthTokenFilter();
     }
     
@@ -58,11 +57,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/test/admin").hasRole("ADMIN")
         .anyRequest().authenticated();
        
-        System.out.println("configure authorisation 1");
        
       http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
       
-      System.out.println("configure authorisation 2");
         
     }
     

@@ -76,7 +76,6 @@ public class CarRentalLocationController {
 	@PostMapping("/admin/carrentallocation/add")
 	public CarRentalLocation addCRLocation(@RequestBody Map<String, Object> payload)
     {	
-		System.out.println(payload);
 		
 		CarRentalLocation crLocation=new CarRentalLocation();
 		

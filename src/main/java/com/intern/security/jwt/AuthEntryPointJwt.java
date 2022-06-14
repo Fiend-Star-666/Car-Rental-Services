@@ -33,7 +33,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
 	    final ObjectMapper mapper = new ObjectMapper();
 	    mapper.writeValue(response.getOutputStream(), body);
-		  System.out.println(request.getContextPath());
 
 	  }
 }
